@@ -4,7 +4,7 @@ class Api::UsersController < ApiController
   protected
   # TODO: TEST
   def fetch_user
-    unless @user = User.slug(params[:user_id]).first
+    unless @user = User.from_param(params[:user_id]).first
       invalid_path("User") if Rails.env.development?
     end
   end#fetch_user

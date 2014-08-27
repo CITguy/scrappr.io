@@ -1,5 +1,21 @@
 <%= form_for [@user, @pile, @scrap], html: { role: "form", class: "form-horizontal" } do |f| %>
   <div class="form-group">
+    <%= f.label :endpoint, "Endpoint:", class:"col-md-2" %>
+    <div class="col-md-10">
+      <%= f.text_field :endpoint, class: "form-control" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :content_type, "*Content Type:", class:"col-md-2" %>
+    <div class="col-md-10">
+      <p><%= @scrap.content_type %></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :status_code, "Status Code:", class:"col-md-2" %>
+    <%= f.select :status_code, StatusCode.options_for_select, {}, class: "col-md-4" %>
+  </div>
+  <div class="form-group">
     <%= f.label :body, "Response:", class: "col-md-2" %>
     <div class="col-md-10 scrap-editor-container"
       id="scrap-editor-<%= @scrap.id %>"

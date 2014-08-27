@@ -15,3 +15,4 @@
 //= require bootstrap.min
 //= require tinymce
 //= require _ace
+//= require _select2

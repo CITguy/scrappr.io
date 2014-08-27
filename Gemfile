@@ -41,6 +41,7 @@ gem 'omniauth-github'
 gem 'breadcrumbs_on_rails'
 gem 'tinymce-rails'
 #gem 'ace-rails-ap'
+#gem 'select2-rails'
 
 gem "less-rails"
 group :test, :development do

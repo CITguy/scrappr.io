@@ -13,8 +13,23 @@ class Users::Piles::ScrapsController < Users::PilesController
   def show
   end
 
+  def new
+    @scrap = @pile.scraps.build
+  end
+
   def edit
     add_breadcrumb "Edit"
+  end
+
+  def create
+    @scrap = @pile.scraps.new(scrap_attributes)
+    if @scrap.save
+      flash[:notice] = "Scrap Saved"
+      redirect_to user_pile_scrap_path(@user, @pile, @scrap)
+    else
+      flash.now[:alert] = "Scrap Could not be Saved: #{@scrap.errors.full_messages}"
+      render :new
+    end
   end
 
   def update

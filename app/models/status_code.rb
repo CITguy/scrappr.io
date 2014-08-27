@@ -18,4 +18,16 @@ class StatusCode < ActiveRecord::Base
 
   validates :standard,
             :inclusion => { :in => [true, false] }
+
+  # TODO: Test/Expand
+  def self.options_for_select
+    all.map do |status_code|
+      [status_code.option_text, status_code.number]
+    end
+  end
+
+  # TODO: Test/Expand
+  def option_text
+    "#{self.number} - #{self.desc}"
+  end
 end#StatusCode
