@@ -1,0 +1,56 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title"><%= @pile.name %></h3>
+  </div>
+  <div class="panel-body">
+    <%= @pile.description.html_safe %>
+  </div>
+  <div class="panel-footer">
+    <%= link_to edit_user_pile_path(@user, @pile), class: "btn btn-default" do %>
+      <span class="fa fa-pencil"></span> Edit
+    <% end %>
+    <%= link_to "", class: "btn btn-danger pull-right" do %>
+      <span class="fa fa-bomb"></span> Destroy
+    <% end %>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Pile Scraps</h3>
+  </div>
+  <% if Array(@scraps).empty? %>
+    <div class="panel-body">
+      <p>No scraps<br />...how boring</p>
+    </div>
+  <% else %>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th class="col-xs-1">Method</th>
+          <th class="col-xs-6">Endpoint</th>
+          <th class="col-xs-3">Content Type</th>
+          <th class="col-xs-1">Status</th>
+          <th class="col-xs-1">Private?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Array(@scraps).each do |scrap| %>
+          <tr>
+            <td><%= method_label(scrap.http_method) %></td>
+            <td class="monospace">
+              <%= link_to user_pile_scrap_path(@user, @pile, scrap.id) do %>
+                /<%= scrap.endpoint %>
+              <% end %>
+            </td>
+            <td><%= scrap.content_type %></td>
+            <td><%= status_label(scrap.status_code) %></td>
+            <td><%= scrap.private? %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+  <div class="panel-footer">
+    <%= link_to "New Scrap", "", class: "btn btn-primary" %>
+  </div>
+</div>

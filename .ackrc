@@ -1,0 +1,4 @@
+--ignore-dir=log
+--ignore-dir=doc
+--ignore-dir=coverage
+--ignore-dir=tmp

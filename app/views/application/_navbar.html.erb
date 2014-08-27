@@ -1,0 +1,37 @@
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <%= link_to "Scrap-It", root_path, class:"navbar-brand" %>
+    </div>
+    <div class="pull-right">
+      <ul class="nav navbar-nav navbar-right">
+        <% if user_signed_in? %>
+          <p class="navbar-text"><%= current_user.username %></p>
+          <li>
+            <%= link_to user_piles_path(current_user), title: "Manage Piles" do %>
+              <span class="fa fa-cubes"></span>
+            <% end %>
+          </li>
+          <!--li>
+            <%= link_to "", title: "Manage Scraps" do %>
+              <span class="fa fa-cube"></span>
+              Manage Scraps
+            <% end %>
+          </li-->
+          <li>
+            <%= link_to logout_path, method: :delete, class: "logout", title: "Logout" do %>
+              <span class="fa fa-power-off"></span>
+            <% end %>
+          </li>
+        <% else %>
+          <p class="navbar-text">
+            <%= link_to user_omniauth_authorize_path(:github), class: "btn btn-sm btn-social btn-github" do %>
+              <span class="fa fa-github"></span>
+              Sign in with Github
+            <% end %>
+          </p>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Scrap-It</title>
+  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <%= csrf_meta_tags %>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+</head>
+<body>
+  <%= render "navbar" %>
+
+  <div id="content" class="container">
+    <%= render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder %>
+    <%= render "flash" %>
+
+    <div class="col-md-12">
+      <div class="row">
+        <%= yield %>
+      </div>
+    </div>
+  </div><!-- #content -->
+
+  <%= javascript_include_tag "application" %>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<% {:notice => "success", :alert => "danger"}.each do |k,v| %>
+  <% if flash_content = flash[k] %>
+    <div class="alert alert-<%= v %>">
+      <%= flash_content %>
+    </div>
+  <% end %>
+<% end %>

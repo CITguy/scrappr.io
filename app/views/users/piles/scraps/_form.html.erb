@@ -1,0 +1,16 @@
+<%= form_for [@user, @pile, @scrap], html: { role: "form", class: "form-horizontal" } do |f| %>
+  <div class="form-group">
+    <%= f.label :body, "Response:", class: "col-md-2" %>
+    <div class="col-md-10 scrap-editor-container"
+      id="scrap-editor-<%= @scrap.id %>"
+      data-hidden="#scrap_body"
+    ><%= @scrap.body %></div>
+    <%= f.hidden_field :body %>
+  </div>
+  <div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+      <%= f.submit "Save Scrap", class: "btn btn-primary" %>
+      <%= link_to "cancel", :back, class: "btn btn-link" %>
+    </div>
+  </div>
+<% end %>
