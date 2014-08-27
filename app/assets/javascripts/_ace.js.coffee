@@ -1,6 +1,6 @@
-#= require ./ace/ace
-#= require ./ace/theme-textmate
-#= require ./ace/mode-json
+#= require ace/ace
+#= require ace/theme-textmate
+#= require ace/mode-json
 #= require_self
 
 ace_theme = "ace/theme/textmate"
