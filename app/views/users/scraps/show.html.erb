@@ -1,0 +1,43 @@
+<div class="col-md-9">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="btn-group pull-right">
+        <%= link_to edit_user_scrap_path(@user, @scrap), class: 'btn btn-sm btn-default' do %>
+          <span class="fa fa-pencil"></span>&nbsp; Edit
+        <% end %>
+      </div>
+      <span class="panel-title">
+        <%= method_label(@scrap.http_method) %>
+        <%= user_api_scrap_url(@user, @scrap) %>
+      </span>
+      <div class="clearfix"></div>
+    </div>
+    <!-- TODO: HEADERS
+    <table class="table table-condensed table-striped">
+      <thead>
+        <tr>
+          <th class="col-md-3">Header</th>
+          <th class="col-md-9">Value</th>
+        </tr>
+      </thead>
+    </table>
+    -->
+    <%= ace_container @scrap, "viewer" do %><%= @scrap.body %><% end %>
+    <div class="panel-footer">
+      <div class="row">
+        <div class="col-md-6 text-left pull-left">
+          <%= status_label(@scrap.status_code) %>
+          <span class="badge"><%= @scrap.content_type %></span>
+        </div>
+        <div class="col-md-6 text-right pull-right">
+          <%= link_to user_scrap_path(@user, @scrap), method: :delete, class: "btn btn-sm btn-danger" do %>
+            <span class="fa fa-trash-o"></span> Destroy
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-md-3">
+  <!-- Vertical Tabs -->
+</div>

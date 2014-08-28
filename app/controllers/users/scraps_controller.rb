@@ -1,20 +1,25 @@
-class Users::Piles::ScrapsController < Users::PilesController
-  before_action :fetch_user_pile
+class Users::ScrapsController < UsersController
+  before_action :fetch_user
+
   before_action :fetch_scrap, only: [:show, :edit, :update, :destroy]
   before_action do
-    add_breadcrumb @pile.name, user_pile_path(@user, @pile)
-    add_breadcrumb "Scraps"
+    add_breadcrumb @user.username
+    add_breadcrumb "Scraps", user_scraps_path(@user)
   end
 
   before_action only: [:show, :edit] do
-    add_breadcrumb "/#{@scrap.endpoint}", user_pile_scrap_path(@user, @pile, @scrap)
+    add_breadcrumb "/#{@scrap.endpoint}", user_scrap_path(@user, @scrap)
+  end
+
+  def index
+    @scraps = @user.scraps
   end
 
   def show
   end
 
   def new
-    @scrap = @pile.scraps.build
+    @scrap = @user.scraps.build
   end
 
   def edit
@@ -22,10 +27,10 @@ class Users::Piles::ScrapsController < Users::PilesController
   end
 
   def create
-    @scrap = @pile.scraps.new(scrap_attributes)
+    @scrap = @user.scraps.new(scrap_attributes)
     if @scrap.save
       flash[:notice] = "Scrap Saved"
-      redirect_to user_pile_scrap_path(@user, @pile, @scrap)
+      redirect_to user_scrap_path(@user, @scrap)
     else
       flash.now[:alert] = "Scrap Could not be Saved: #{@scrap.errors.full_messages}"
       render :new
@@ -36,7 +41,7 @@ class Users::Piles::ScrapsController < Users::PilesController
     @scrap.update_attributes(scrap_attributes)
     if @scrap.save
       flash[:notice] = "Scrap Updated"
-      redirect_to user_pile_scrap_path(@user, @pile, @scrap)
+      redirect_to user_scrap_path(@user, @scrap)
     else
       flash.now[:alert] = "Scrap Could not be updated: #{@scrap.errors.full_messages}"
       render :edit
@@ -48,7 +53,7 @@ class Users::Piles::ScrapsController < Users::PilesController
 
   protected
   def fetch_scrap
-    @scrap = @pile.scraps.find(params[:id])
+    @scrap = @user.scraps.find(params[:id])
   end
 
   private

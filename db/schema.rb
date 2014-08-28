@@ -14,17 +14,7 @@
 ActiveRecord::Schema.define(version: 20140824190809) do
 
   create_table "content_types", force: true do |t|
-    t.string "ilk", null: false
-  end
-
-  create_table "piles", force: true do |t|
-    t.string   "name",                        null: false
-    t.string   "slug",                        null: false
-    t.text     "description"
-    t.boolean  "protected",   default: false, null: false
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string "name", null: false
   end
 
   create_table "scraps", force: true do |t|
@@ -35,9 +25,10 @@ ActiveRecord::Schema.define(version: 20140824190809) do
     t.text     "body",                                            null: false
     t.boolean  "private",            default: false,              null: false
     t.string   "character_encoding", default: "UTF-8",            null: false
-    t.integer  "pile_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "uid"
   end
 
   create_table "status_codes", force: true do |t|

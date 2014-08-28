@@ -1,4 +1,4 @@
-<%= form_for [@user, @pile, @scrap], html: { role: "form", class: "form-horizontal" } do |f| %>
+<%= form_for [@user, @scrap], html: { role: "form", class: "form-horizontal" } do |f| %>
   <div class="form-group">
     <%= f.label :endpoint, "Endpoint:", class:"col-md-2" %>
     <div class="col-md-10">
@@ -16,11 +16,13 @@
     <%= f.select :status_code, StatusCode.options_for_select, {}, class: "col-md-4" %>
   </div>
   <div class="form-group">
+    <% methods_array = %w[ GET POST PUT PATCH DELETE COPY HEAD OPTIONS LINK UNLINK PURGE ] %>
+    <%= f.label :http_method, "HTTP Method:", class:"col-md-2" %>
+    <%= f.select :http_method, methods_array, {}, class: "col-md-4" %>
+  </div>
+  <div class="form-group">
     <%= f.label :body, "Response:", class: "col-md-2" %>
-    <div class="col-md-10 scrap-editor-container"
-      id="scrap-editor-<%= @scrap.id %>"
-      data-hidden="#scrap_body"
-    ><%= @scrap.body %></div>
+    <%= ace_container @scrap, "editor", data: { hidden: "#scrap_body" } do %><%= @scrap.body %><% end %>
     <%= f.hidden_field :body %>
   </div>
   <div class="form-group">

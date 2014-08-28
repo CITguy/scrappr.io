@@ -10,7 +10,7 @@
   <%= render "navbar" %>
 
   <div id="content" class="container">
-    <%= render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder %>
+    <%  render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder %>
     <%= render "flash" %>
 
     <div class="col-md-12">
@@ -19,6 +19,8 @@
       </div>
     </div>
   </div><!-- #content -->
+
+  <%= render "footer" %>
 
   <%= javascript_include_tag "application" %>
 </body>

@@ -1,22 +1,6 @@
-<div class="panel panel-primary">
-  <div class="panel-heading">
-    <h3 class="panel-title"><%= @pile.name %></h3>
-  </div>
-  <div class="panel-body">
-    <%= @pile.description.html_safe %>
-  </div>
-  <div class="panel-footer">
-    <%= link_to edit_user_pile_path(@user, @pile), class: "btn btn-default" do %>
-      <span class="fa fa-pencil"></span> Edit
-    <% end %>
-    <%= link_to "", class: "btn btn-danger pull-right" do %>
-      <span class="fa fa-bomb"></span> Destroy
-    <% end %>
-  </div>
-</div>
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Pile Scraps</h3>
+    <h3 class="panel-title"><%= @user.username %> Scraps</h3>
   </div>
   <% if Array(@scraps).empty? %>
     <div class="panel-body">
@@ -38,7 +22,7 @@
           <tr>
             <td><%= method_label(scrap.http_method) %></td>
             <td class="monospace">
-              <%= link_to user_pile_scrap_path(@user, @pile, scrap.id) do %>
+              <%= link_to user_scrap_path(@user, scrap.id) do %>
                 /<%= scrap.endpoint %>
               <% end %>
             </td>
@@ -51,6 +35,6 @@
     </table>
   <% end %>
   <div class="panel-footer">
-    <%= link_to "New Scrap", new_user_pile_scrap_path(@user, @pile), class: "btn btn-primary" %>
+    <%= link_to "New Scrap", new_user_scrap_path(@user), class: "btn btn-primary" %>
   </div>
 </div>

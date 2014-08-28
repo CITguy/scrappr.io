@@ -103,6 +103,4 @@ StatusCode.create([
 
 User.create({ provider: "github", uid: "545605", username: "CITguy" })
 
-Pile.create({ name: "demo pile", description: "This is a demonstration Pile.", user: User.first })
-
-Scrap.create({ pile: Pile.first, endpoint: "foo/bar", body: %Q[{"hello":"world"}] })
+Scrap.create({ user: User.first, endpoint: "good/morning/sunshine", body: %Q[{"earth":"hello"}] })

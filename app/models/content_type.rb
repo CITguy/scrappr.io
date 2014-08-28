@@ -2,12 +2,13 @@
 #
 # Table name: content_types
 #
-#  id  :integer          not null, primary key
-#  ilk :string(255)      not null
+#  id   :integer          not null, primary key
+#  name :string(255)      not null
 #
 
 class ContentType < ActiveRecord::Base
-  validates :ilk,
+  # TODO: TEST
+  validates :name,
             :presence => true,
             :uniqueness => true
 end#ContentType

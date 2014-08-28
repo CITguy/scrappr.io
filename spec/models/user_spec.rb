@@ -58,11 +58,8 @@ describe User do
         expect(subject.to_param).to eq(subject.username)
       end
     end##to_param
-    describe "#piles" do
-      it { expect(subject).to respond_to(:piles) }
-    end
     describe "#scraps" do
-      pending
+      it { expect(subject).to respond_to(:scraps) }
     end
   end#(instance)
 end

@@ -1,7 +1,6 @@
-class UsersController < AuthenticatedController
+class UsersController < ApplicationController
 
   protected
-
   # TODO: TEST
   def fetch_user
     @user = User.from_param(params[:user_id]).first!

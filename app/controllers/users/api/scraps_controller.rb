@@ -1,7 +1,7 @@
-class Api::Users::Piles::ScrapsController < Api::Users::PilesController
+class Users::Api::ScrapsController < Users::ApiController
   # TODO: TEST
   def show
-    if @scrap = @pile.scraps.from_param(params[:scrap_endpoint]).first
+    if @scrap = @user.scraps.from_param(params[:endpoint]).first
       response.headers.merge!(@scrap.http_headers)
       render @scrap.render_options
     else

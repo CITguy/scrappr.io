@@ -22,6 +22,6 @@ FactoryGirl.define do
     endpoint "foo/bar/baz"
     content_type "application/json"
     body "Hello World"
-    pile
+    user
   end
 end

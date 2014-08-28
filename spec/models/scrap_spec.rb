@@ -10,7 +10,7 @@
 #  body               :text             not null
 #  private            :boolean          default(FALSE), not null
 #  character_encoding :string(255)      default("UTF-8"), not null
-#  pile_id            :integer
+#  user_id            :integer
 #  created_at         :datetime
 #  updated_at         :datetime
 #
@@ -50,14 +50,14 @@ describe Scrap do
         context "if duplicate" do
           let(:dupe_scrap) { FactoryGirl.create(:scrap) }
           before(:each) { subject.endpoint = dupe_scrap.endpoint }
-          context "for same pile" do
-            before(:each) { subject.pile = dupe_scrap.pile }
+          context "for same user" do
+            before(:each) { subject.user = dupe_scrap.user }
             it "should not be valid" do
               expect(subject).not_to be_valid
             end
           end
-          context "for different pile" do
-            before(:each) { subject.pile = FactoryGirl.build(:pile) }
+          context "for different user" do
+            before(:each) { subject.user = FactoryGirl.build(:user) }
             it "should be valid" do
               expect(subject).to be_valid
             end
@@ -129,14 +129,8 @@ describe Scrap do
         expect(subject.to_param).to eq(subject.endpoint)
       end
     end
-    describe "#pile" do
-      it { expect(subject).to respond_to(:pile) }
-    end
     describe "#user" do
       it { expect(subject).to respond_to(:user) }
-      it "should be equal to pile.user" do
-        expect(subject.user).to eq(subject.pile.user)
-      end
     end
 
     describe "#render_options" do

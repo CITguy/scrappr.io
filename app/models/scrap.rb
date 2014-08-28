@@ -10,17 +10,19 @@
 #  body               :text             not null
 #  private            :boolean          default(FALSE), not null
 #  character_encoding :string(255)      default("UTF-8"), not null
-#  pile_id            :integer
+#  user_id            :integer
 #  created_at         :datetime
 #  updated_at         :datetime
 #
 
 class Scrap < ActiveRecord::Base
+  self.primary_key = "uid"
+
   ENCODINGS = [ "UTF-8", "UTF-16", "ISO-8859-1" ]
 
   validates :endpoint,
             presence: true,
-            uniqueness: { scope: [:pile] }
+            uniqueness: { scope: [:user] } # TODO: TEST
 
   # TODO: regex validation of code (cannot be more than 599 or less than 100)
   validates :status_code,
@@ -35,19 +37,25 @@ class Scrap < ActiveRecord::Base
   validates :character_encoding,
             inclusion: { in: ENCODINGS }
 
-  belongs_to :pile
-  has_one :user, through: :pile
+  belongs_to :user
 
+  before_create :generate_uid!
+
+  scope :publicly_available, ->{ where(:private => false) }
+  scope :recent, ->{ order(:created_at => :desc) }
 
   def self.from_param(slug)
     where(endpoint: slug)
   end
 
-
-  # @return [String]
-  #def to_param
-  #  self.endpoint
-  #end
+  # TODO: TEST
+  def truncate_body(lines=10)
+    body_arr = body.split("\r\n")
+    output = []
+    output << body_arr[0...lines]
+    output << "..." if (body_arr.size > lines.to_i)
+    output.join("\n")
+  end#truncate_body
 
 
   # Get compatible hash for ActiveController::Base#render
@@ -72,4 +80,9 @@ class Scrap < ActiveRecord::Base
       "Content-Type" => self.content_type
     }
   end#http_headers
+
+  #private
+  def generate_uid!
+    self.uid = SecureRandom.uuid
+  end#generate_uid!
 end#Scrap

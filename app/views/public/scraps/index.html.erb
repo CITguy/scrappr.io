@@ -1,0 +1,24 @@
+<div class="col-md-9">
+  <% Array(@scraps).each do |scrap| %>
+    <div class="media">
+      <div class="media-body">
+        <h4 class="media-heading">
+          <div class="pull-left">
+            <%= method_label(scrap.http_method) %>
+            <%= link_to scrap.user.username, user_scraps_path(scrap.user) %>
+            <%= link_to "/#{truncate(scrap.endpoint, length: 40, omission: "...")}", user_scrap_path(scrap.user, scrap) %>
+          </div>
+          <div class="pull-right">
+            <%= status_label(scrap.status_code) %>
+            <span class="badge"><%= scrap.content_type %></span>
+          </div>
+          <div class="clearfix"></div>
+        </h4>
+        <pre><code class="json"><%= scrap.truncate_body(4) %></code></pre>
+      </div><!-- .media-body -->
+    </div><!-- .media -->
+  <% end %>
+</div>
+<div class="col-md-3">
+  <!-- Reserved for Sorting/Filtering -->
+</div>

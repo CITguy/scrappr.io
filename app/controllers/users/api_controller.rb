@@ -1,5 +1,7 @@
 # TODO: AUTHENTICATED CONTROLLER OF SOME SORT
-class ApiController < ApplicationController
+class Users::ApiController < UsersController
+  before_action :fetch_user
+
   layout :false
 
   # TODO: TEST

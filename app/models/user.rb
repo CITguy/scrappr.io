@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   # TODO: uniqueness of uid in scope of provider
   #validates :uid, uniqueness: { scope: [:provider] }
 
-  has_many :piles
+  has_many :scraps
 
 
   def self.from_omniauth(auth)

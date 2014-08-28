@@ -10,9 +10,11 @@ class CreateScraps < ActiveRecord::Migration
 
       t.string  :character_encoding,  null: false, default: "UTF-8"
 
-      t.references :pile
+      t.references :user
 
-      t.timestamps
+      t.timestamp :created_at
+      t.timestamp :updated_at
+      t.string :uid
     end
   end
 end

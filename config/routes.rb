@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  # Omniauth-ONLY Login
+  # Omniauth-ONLY login scheme
   devise_for :users, controllers: { omniauth_callbacks: "user_sessions" }
   devise_scope :user do
     delete "logout" => "user_sessions#destroy"
@@ -8,77 +8,13 @@ Rails.application.routes.draw do
   ## UI Routes
   resources :users, only: :none do
     scope module: :users do
-      resources :piles do
-        scope module: :piles do
-          resources :scraps, except: [:index]
-        end
-      end
+      resources :scraps
     end
   end
-
-  # API Routes
-  namespace :api do
-    scope module: :users do
-      scope module: :piles do
-        match ":user_id/:pile_id/*scrap_endpoint" => "scraps#show", via: :all
-      end
-    end
+  ## User-API Routes
+  scope module: "users/api", as: :user_api do
+    match ":user_id/api/*endpoint" => "scraps#show", via: :all, as: :endpoint
   end
 
-  root to: "home#index"
-
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
+  root to: "public/scraps#index"
 end

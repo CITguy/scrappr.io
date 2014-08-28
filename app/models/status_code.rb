@@ -20,6 +20,7 @@ class StatusCode < ActiveRecord::Base
             :inclusion => { :in => [true, false] }
 
   # TODO: Test/Expand
+  # NOTE: maybe in decorator?
   def self.options_for_select
     all.map do |status_code|
       [status_code.option_text, status_code.number]
@@ -27,6 +28,7 @@ class StatusCode < ActiveRecord::Base
   end
 
   # TODO: Test/Expand
+  # NOTE: maybe in decorator?
   def option_text
     "#{self.number} - #{self.desc}"
   end
