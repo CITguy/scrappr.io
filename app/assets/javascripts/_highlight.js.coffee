@@ -2,7 +2,6 @@
 #= require_self
 
 # Config, etc.
-console.log("Languages:", hljs.listLanguages())
 hljs.configure
   tabReplace: "  "  #2 spaces
   languages: [

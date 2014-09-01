@@ -12,8 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require bootstrap.min
 //= require tinymce
 //= require _ace
-//  require _select2
+//= require _select2
 //= require _highlight
+//= require ./bootstrap
+//
+//= require ko

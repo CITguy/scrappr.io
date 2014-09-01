@@ -11,15 +11,16 @@
  * file per style scope.
  *
  *= require_self
- *= require select2
+ * require select2
  */
 // http://getbootstrap.com
-@import "bootstrap/index";
-// http://lipis.github.io/bootstrap-social
-@import "bootstrap-social";
+@import "bootstrap/index.css";
 // http://fortawesome.github.io/Font-Awesome/
-@import "fontawesome/index";
+@import "fontawesome/index.css";
+
+@import "select2.css";
+@import "select2-bootstrap.css";
+
 
 @import "theme";
-
-@import "_highlight";
+@import "highlight";

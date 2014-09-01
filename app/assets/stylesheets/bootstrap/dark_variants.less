@@ -1,0 +1,28 @@
+@import "mixins.less";
+
+@brand-dark: #777;
+
+//== Additional Button
+@btn-dark-color:  #fff;
+@btn-dark-bg:     @brand-dark;
+@btn-dark-border: darken(@btn-dark-bg, 5%);
+.btn-dark {
+  .button-variant(@btn-dark-color; @btn-dark-bg; @btn-dark-border);
+}
+
+
+//== Additional Panel
+@panel-dark-text:       @btn-dark-color;
+@panel-dark-border:     @btn-dark-border;
+@panel-dark-heading-bg: @btn-dark-bg;
+.panel-dark {
+  .panel-variant(@panel-dark-border; @panel-dark-text; @panel-dark-heading-bg; @panel-dark-border);
+}
+
+//== Additional Badges
+@badge-dark-bg:     @brand-dark;
+
+.badge-dark {
+  background-color: @btn-dark-bg;
+  color: @btn-dark-color;
+}
