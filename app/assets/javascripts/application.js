@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require tinymce
 //= require _ace
 //= require _select2
 //= require _highlight

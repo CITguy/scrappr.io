@@ -7,7 +7,6 @@
 #
 
 class ContentType < ActiveRecord::Base
-  # TODO: TEST
   validates :name,
             :presence => true,
             :uniqueness => true

@@ -1,6 +1,6 @@
 @import "mixins.less";
 
-@brand-dark: #777;
+@brand-dark: darken(#777, 25%);
 
 //== Additional Button
 @btn-dark-color:  #fff;
@@ -25,4 +25,8 @@
 .badge-dark {
   background-color: @btn-dark-bg;
   color: @btn-dark-color;
+}
+
+.label-dark {
+  .label-variant(@brand-dark);
 }

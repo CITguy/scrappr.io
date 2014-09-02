@@ -1,3 +1,23 @@
-<%= form_panel "Edit Scrap" do %>
-  <%= render "form" %>
+<% content_for :subnav do %>
+  <div class="media">
+    <%= render partial: "avatar", locals: { user: @user } %>
+    <div class="media-body">
+      <div class="col-md-8">
+        <div class="metadata">
+          Editing:
+          <span class="meta-endpoint">
+            <%= link_to @scrap.endpoint, user_scrap_path(@user, @scrap) %>
+          </span>
+        </div>
+        <small>
+          Last updated <%= time_ago_in_words(@scrap.updated_at) %> ago
+        </small>
+      </div>
+      <div class="col-md-4 text-right">
+        <%= link_to "Cancel", :back, class: "btn btn-dark" %>
+        <!-- Cancel Link -->
+      </div>
+    </div>
+  </div>
 <% end %>
+<%= render "form" %>

@@ -2,31 +2,58 @@
 #
 # Table name: scraps
 #
-#  id                 :integer          not null, primary key
 #  http_method        :string(255)      default("GET"), not null
 #  endpoint           :string(255)      not null
 #  status_code        :integer          default(200), not null
 #  content_type       :string(255)      default("application/json"), not null
 #  body               :text             not null
-#  private            :boolean          default(FALSE), not null
+#  is_public          :boolean          default(TRUE), not null
+#  description        :text
+#  language           :string(255)      default("json"), not null
 #  character_encoding :string(255)      default("UTF-8"), not null
 #  user_id            :integer
 #  created_at         :datetime
 #  updated_at         :datetime
+#  uid                :string(255)      not null, primary key
 #
 
 class Scrap < ActiveRecord::Base
   self.primary_key = "uid"
 
-  ENCODINGS = [ "UTF-8", "UTF-16", "ISO-8859-1" ]
+  HTTP_METHODS = [
+    "GET", "POST", "PUT", "PATCH", "DELETE"
+    #COPY HEAD OPTIONS
+    #LINK UNLINK PURGE
+  ].freeze
+
+  ENCODINGS = [ "UTF-8", "UTF-16", "ISO-8859-1" ].freeze
+
+  # TODO: TEST
+  LANGUAGES = {
+    "XML" => "xml",
+    "Javascript" => "javascript",
+    "JSON" => "json",
+    "HTML" => "html",
+    "Text" => "plain_text"
+  }.freeze
+
+  validates :user,
+            presence: true
+
+  validates :http_method,
+            presence: true,
+            inclusion: { in: HTTP_METHODS }
 
   validates :endpoint,
             presence: true,
             uniqueness: { scope: [:user] } # TODO: TEST
 
-  # TODO: regex validation of code (cannot be more than 599 or less than 100)
   validates :status_code,
-            presence: true
+            numericality: {
+              only_integer: true,
+              greater_than_or_equal_to: 100,
+              less_than: 600
+            }
 
   validates :content_type,
             presence: true
@@ -34,28 +61,45 @@ class Scrap < ActiveRecord::Base
   validates :body,
             presence: true
 
+  validates :is_public,
+            inclusion: { in: [true, false] }
+
   validates :character_encoding,
             inclusion: { in: ENCODINGS }
 
+  validates :language,
+            inclusion: { in: LANGUAGES.values }
+
+  validates :uid,
+            presence: true
+
   belongs_to :user
 
-  before_create :generate_uid!
+  before_validation :ensure_uid!
 
-  scope :publicly_available, ->{ where(:private => false) }
-  scope :recent, ->{ order(:created_at => :desc) }
+  scope :visible, ->{ where(:is_public => true) }
+  scope :invisible, ->{ where(:is_public => false) }
+  scope :newest, ->{ order(:created_at => :desc) }
+  scope :oldest, ->{ order(:created_at => :asc) }
+  scope :lively, ->{ order(:updated_at => :desc) }
+  scope :stagnant, ->{ order(:updated_at => :asc) }
 
-  def self.from_param(slug)
-    where(endpoint: slug)
-  end
 
-  # TODO: TEST
+  # @param [Integer] lines Number of lines to truncate at
+  # @return [String] rebuilt body string for condensed output
   def truncate_body(lines=10)
-    body_arr = body.split("\r\n")
+    body_arr = body_lines
     output = []
     output << body_arr[0...lines]
     output << "..." if (body_arr.size > lines.to_i)
     output.join("\n")
   end#truncate_body
+
+
+  # @return [Array]
+  def body_lines
+    body.split(/\r\n|\r|\n/)
+  end#body_lines
 
 
   # Get compatible hash for ActiveController::Base#render
@@ -81,8 +125,15 @@ class Scrap < ActiveRecord::Base
     }
   end#http_headers
 
-  #private
+
+  # Creates a SecureRandom UUID and sets the uid
+  # @return [String]
   def generate_uid!
     self.uid = SecureRandom.uuid
   end#generate_uid!
+
+
+  def ensure_uid!
+    self.uid ||= generate_uid!
+  end
 end#Scrap

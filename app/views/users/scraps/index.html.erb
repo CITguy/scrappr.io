@@ -1,40 +1,43 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h3 class="panel-title"><%= @user.username %> Scraps</h3>
-  </div>
-  <% if Array(@scraps).empty? %>
-    <div class="panel-body">
-      <p>No scraps<br />...how boring</p>
-    </div>
-  <% else %>
-    <table class="table table-condensed">
-      <thead>
-        <tr>
-          <th class="col-xs-1">Method</th>
-          <th class="col-xs-6">Endpoint</th>
-          <th class="col-xs-3">Content Type</th>
-          <th class="col-xs-1">Status</th>
-          <th class="col-xs-1">Private?</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% Array(@scraps).each do |scrap| %>
-          <tr>
-            <td><%= method_label(scrap.http_method) %></td>
-            <td class="monospace">
-              <%= link_to user_scrap_path(@user, scrap.id) do %>
-                /<%= scrap.endpoint %>
-              <% end %>
-            </td>
-            <td><%= scrap.content_type %></td>
-            <td><%= status_label(scrap.status_code) %></td>
-            <td><%= scrap.private? %></td>
-          </tr>
+<% content_for :subnav do %>
+  <div class="media">
+    <% if current_user != @user %>
+      <%= render partial: "avatar", locals: { user: @user } %>
+    <% end %>
+    <div class="media-body">
+      <div class="col-md-8">
+        <% if current_user == @user %>
+          <div class="metadata">
+            <span class="meta-title">Your Scraps</span>
+          </div>
+        <% else %>
+          <div class="metadata">
+            <span class="meta-title"><%= @user.username %></span>
+          </div>
+          <small>
+            Last Active
+            <% if @user.last_sign_in_at %>
+              <%= time_ago_in_words(@user.last_sign_in_at) %> ago
+            <% else %>
+              Never
+            <% end %>
+          </small>
         <% end %>
-      </tbody>
-    </table>
-  <% end %>
-  <div class="panel-footer">
-    <%= link_to "New Scrap", new_user_scrap_path(@user), class: "btn btn-primary" %>
+      </div>
+      <div class="col-md-4">
+        <!-- for future use -->
+      </div>
+    </div>
   </div>
+<% end %>
+
+<div class="col-md-9">
+  <% if Array(@scraps).empty? %>
+    <p>No scraps... how boring</p>
+  <% else %>
+    <%= render partial: "scraps/index_item", collection: @scraps %>
+  <% end %>
 </div>
+<div class="col-md-3">
+  <!-- Reserved for Sorting/Filtering -->
+</div>
+

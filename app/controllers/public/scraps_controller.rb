@@ -1,6 +1,7 @@
 class Public::ScrapsController < PublicController
   def index
     # Get 10 most recent scraps
-    @scraps = Scrap.publicly_available.recent.limit(10)
+    scraps = Scrap.visible.lively.limit(10)
+    @scraps = scraps.page(params[:page])
   end
 end

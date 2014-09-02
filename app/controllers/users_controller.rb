@@ -7,4 +7,10 @@ class UsersController < ApplicationController
   rescue => e
     redirect_to root_path, alert: "Invalid Path"
   end#fetch_user
+
+  # TODO: TEST
+  def viewing_own_resource?
+    false unless current_user
+    current_user == @user
+  end#viewing_own_resource?
 end

@@ -1,34 +1,63 @@
 <%= form_for [@user, @scrap], html: { role: "form", class: "form-horizontal" } do |f| %>
-  <div class="form-group">
-    <%= f.label :endpoint, "Endpoint:", class:"col-md-2" %>
-    <div class="col-md-10">
-      <%= f.text_field :endpoint, class: "form-control" %>
+  <div class="col-md-8">
+    <div class="form-group">
+      <div class="col-xs-12">
+        <%= f.label :description %>:
+        <%= f.text_field :description, placeholder: "Scrap description...", class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-xs-12">
+        <%= f.label :endpoint %>:
+        <div class="input-group">
+          <span class="input-group-addon">
+            <strong><%= @user.username %></strong>/
+          </span>
+          <%= f.text_field :endpoint, class: "form-control", placeholder: "Scrap endpoint..." %>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <%= render partial: "editor", locals: { scrap: @scrap, form: f } %>
     </div>
   </div>
-  <div class="form-group">
-    <%= f.label :content_type, "*Content Type:", class:"col-md-2" %>
-    <div class="col-md-10">
-      <p><%= @scrap.content_type %></p>
+  <div class="col-md-4">
+    <div class="form-group">
+      <div class="col-xs-12">
+        <%= f.label :http_method, "Method:" %>
+        <%= f.select :http_method, Scrap::HTTP_METHODS, {}, class: "form-control select2-nosearch", width: "400px" %>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <%= f.label :status_code, "Status Code:", class:"col-md-2" %>
-    <%= f.select :status_code, StatusCode.options_for_select, {}, class: "col-md-4" %>
-  </div>
-  <div class="form-group">
-    <% methods_array = %w[ GET POST PUT PATCH DELETE COPY HEAD OPTIONS LINK UNLINK PURGE ] %>
-    <%= f.label :http_method, "HTTP Method:", class:"col-md-2" %>
-    <%= f.select :http_method, methods_array, {}, class: "col-md-4" %>
-  </div>
-  <div class="form-group">
-    <%= f.label :body, "Response:", class: "col-md-2" %>
-    <%= ace_container @scrap, "editor", data: { hidden: "#scrap_body" } do %><%= @scrap.body %><% end %>
-    <%= f.hidden_field :body %>
-  </div>
-  <div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
-      <%= f.submit "Save Scrap", class: "btn btn-primary" %>
-      <%= link_to "cancel", :back, class: "btn btn-link" %>
+    <div class="form-group">
+      <div class="col-xs-12">
+        <%= f.label :status_code, "Status:" %>
+        <%= f.select :status_code, StatusCode.options_for_select, {}, class: "form-control select2" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-xs-12">
+        <%= f.label :content_type, "Content Type:" %>
+        <%= f.text_field :content_type, placeholder: "Content-Type", class: "form-control" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-xs-12">
+        <div class="checkbox">
+          <%= f.label :is_public do %>
+            <%= f.check_box :is_public %>
+            Visible?
+          <% end %>
+        </div>
+        <span class="help-block">
+          <small>Should this scrap be visible when browsing?</small>
+        </span>
+      </div>
+    </div>
+    <hr />
+    <div class="form-group">
+      <div class="col-xs-12 text-right">
+        <%= f.submit "Save Scrap", class: "btn btn-primary" %>
+      </div>
     </div>
   </div>
 <% end %>

@@ -1,47 +1,45 @@
-<nav class="navbar navbar-default navbar-static-top" role="navigation">
+<nav class="navbar navbar-primary navbar-default navbar-static-top" role="navigation">
   <div class="container">
     <div class="navbar-header text-left">
-      <span class="navbar-brand">Scrap-It</span>
+      <span class="navbar-brand"><span class="label label-default">S</span></span>
     </div>
+    <div class="navbar-divider">&nbsp;</div>
     <div class="navbar-left text-left">
-      <%= link_to root_path, class: "btn navbar-btn btn-link" do %>
-        <span class="fa fa-globe"></span> Browse Scraps
-      <% end %>
+      <ul class="nav navbar-nav">
+        <li>
+          <%= link_to root_path do %>
+            <strong><span class="fa fa-globe"></span> All Scraps</strong>
+          <% end %>
+        </li>
+      </ul>
     </div>
-
-    <!--
-    <div class="navbar-left text-left">
-      <%= link_to root_path, class: "btn navbar-btn btn-link text-left" do %>
-        <strong>Scrap-It</strong>
-      <% end %>
-      <%= link_to root_path, class: "btn navbar-btn btn-link text-left" do %>
-        <span class="fa fa-globe"></span> Browse Scraps
-      <% end %>
-    </div>
-    -->
 
     <% if user_signed_in? %>
-      <div class="navbar-left text-left">
-        <%= link_to user_scraps_path(current_user), class: "btn navbar-btn btn-link" do %>
-          <span class="fa fa-cubes"></span> My Scraps
-        <% end %>
-        <%= link_to new_user_scrap_path(current_user), class: "btn navbar-btn btn-link" do %>
-          <span class="fa fa-plus"></span> New Scrap
-        <% end %>
-      </div>
-
       <div class="navbar-right text-right">
-        <div class="navbar-text navbar-left">
-          Signed in as <strong><%= current_user.username %></strong>
-        </div>
-        <div class="navbar-btn navbar-right">
-          <%= link_to logout_path, method: :delete, class: "btn logout-btn btn-danger", title: "Logout" do %>
-            <span class="fa fa-power-off"></span>
-          <% end %>
-        </div>
+        <ul class="nav navbar-nav">
+          <li>
+            <%= link_to new_user_scrap_path(current_user) do %>
+              <span class="fa fa-plus"></span> New Scrap
+            <% end %>
+          </li>
+          <li class="navbar-divider">&nbsp;</li>
+          <li>
+            <%= link_to user_scraps_path(current_user) do %>
+              <% unless current_user.avatar_url.blank? %>
+                <%= image_tag current_user.avatar_url, class: "avatar-tiny img-rounded" %>
+              <% end %>
+              <strong><%= current_user.username %></strong>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to logout_path, method: :delete, title: "Logout" do %>
+              <span class="fa fa-power-off"></span>
+            <% end %>
+          </li>
+        </ul>
       </div>
     <% else %>
-      <div class="navabar-right text-right">
+      <div class="navbar-right text-right">
         <%= link_to user_omniauth_authorize_path(:github), class: "navbar-btn btn btn-social btn-github btn-sm" do %>
           <span class="fa fa-github"></span>
           Sign in with Github
@@ -52,3 +50,12 @@
     <div class="clearfix"></div>
   </div>
 </nav>
+<% if content_for(:subnav) %>
+  <div class="navbar-secondary navbar-default">
+    <div class="container">
+      <%= yield :subnav %>
+    </div>
+  </div>
+<% else %>
+  <br />
+<% end %>

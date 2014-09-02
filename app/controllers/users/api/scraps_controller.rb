@@ -1,7 +1,7 @@
 class Users::Api::ScrapsController < Users::ApiController
   # TODO: TEST
   def show
-    if @scrap = @user.scraps.from_param(params[:endpoint]).first
+    if @scrap = @user.scraps.where(endpoint: params[:endpoint]).first
       response.headers.merge!(@scrap.http_headers)
       render @scrap.render_options
     else

@@ -1,0 +1,10 @@
+<% user ||= nil %>
+<% unless user.nil? %>
+  <div class="pull-left">
+    <% if user.avatar_url.blank? %>
+      <%= image_tag "user_icon.png" %>
+    <% else %>
+      <%= image_tag user.avatar_url, class: "avatar-xlarge img-rounded" %>
+    <% end %>
+  </div>
+<% end %>

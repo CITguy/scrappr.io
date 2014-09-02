@@ -1,0 +1,47 @@
+<% user_theme = current_user.theme.ace_id || "twilight" %>
+<div
+  class="row scrap-editor ko-widget"
+  id="scrap-editor-<%= scrap.id %>"
+  data-ko_class="ace_editor"
+  data-syntax="<%= scrap.language %>"
+  data-theme="<%= user_theme %>"
+  data-hidden_id="#scrap_body_<%= scrap.id %>"
+  data-workspace_id="#editor-workspace-<%= scrap.id %>"
+>
+  <div class="menu">
+    <div class="col-sm-4"><!-- THEME SELECT -->
+      <div class="input-group select2-bootstrap-prepend">
+        <span class="input-group-addon">
+          <span class="fa fa-paint-brush"></span>
+        </span>
+        <select data-bind="value: theme" class="form-control input-sm select2-nosearch" >
+          <%= grouped_options_for_select(EditorTheme.grouped_options_for_select, user_theme) %>
+        </select>
+      </div>
+    </div>
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4"><!-- LANGUAGE SELECT -->
+      <div class="input-group select2-bootstrap-prepend">
+        <span class="input-group-addon">
+          <span class="fa fa-code"></span>
+        </span>
+        <%= form.select :language,
+          options_for_select(Scrap::LANGUAGES, scrap.language),
+          { include_blank: true },
+          {
+            class: "form-control input-sm select2-nosearch",
+            data: { bind: "value: syntax", placeholder: "Language" }
+          }
+        %>
+      </div>
+    </div>
+  </div><!-- /.menu -->
+
+  <div class="row workspace-row">
+    <div class="col-xs-12">
+      <div id="editor-workspace-<%= scrap.id %>" class="workspace"><%= scrap.body %></div>
+      <!-- required form control to send updated content -->
+      <%= form.hidden_field :body, id: "scrap_body_#{scrap.id}" %>
+    </div>
+  </div><!-- /.workspace-row -->
+</div>

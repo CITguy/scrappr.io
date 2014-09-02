@@ -6,7 +6,7 @@ gem 'rails', '4.1.1'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use SCSS for stylesheets
-#gem 'sass-rails', '~> 4.0.3'
+gem 'sass-rails'#, '~> 4.0.3'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
@@ -38,12 +38,10 @@ gem 'jquery-rails'
 gem 'devise'
 gem 'omniauth-github'
 
-gem 'breadcrumbs_on_rails'
-gem 'tinymce-rails'
-#gem 'ace-rails-ap'
-#gem 'select2-rails'
+gem 'cancancan'
+gem 'less-rails'
+gem 'kaminari', github: "amatsuda/kaminari"
 
-gem "less-rails"
 group :test, :development do
   gem "factory_girl_rails", "~> 4.0"
   gem 'rspec-rails'

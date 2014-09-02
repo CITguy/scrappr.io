@@ -8,7 +8,11 @@ Rails.application.routes.draw do
   ## UI Routes
   resources :users, only: :none do
     scope module: :users do
-      resources :scraps
+      resources :scraps do
+        member do
+          get :raw
+        end
+      end
     end
   end
   ## User-API Routes

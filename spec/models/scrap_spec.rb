@@ -2,140 +2,447 @@
 #
 # Table name: scraps
 #
-#  id                 :integer          not null, primary key
 #  http_method        :string(255)      default("GET"), not null
 #  endpoint           :string(255)      not null
 #  status_code        :integer          default(200), not null
 #  content_type       :string(255)      default("application/json"), not null
 #  body               :text             not null
-#  private            :boolean          default(FALSE), not null
+#  is_public          :boolean          default(TRUE), not null
+#  description        :text
+#  language           :string(255)      default("json"), not null
 #  character_encoding :string(255)      default("UTF-8"), not null
 #  user_id            :integer
 #  created_at         :datetime
 #  updated_at         :datetime
+#  uid                :string(255)      not null, primary key
 #
 
 require 'rails_helper'
 
 describe Scrap do
   subject { Scrap }
-  describe ".from_param" do
-    before(:each) do
-      allow(subject).to receive(:where).and_return(true)
-    end
-    it "should filter by proper values" do
-      subject.from_param("foobar")
-      expect(subject).to have_received(:where).with({ endpoint: "foobar" })
-    end
-  end
 
-  context "(instance)" do
+  describe "(class)" do
+    context ".primary_key" do
+      it "should respond" do
+        expect(subject).to respond_to(:primary_key)
+      end
+      it "should be 'uid'" do
+        expect(subject.primary_key).to eq("uid")
+      end
+    end#.primary_key
+    context "HTTP_METHODS" do
+      it "should respond" do
+        expect(subject.constants).to include(:HTTP_METHODS)
+      end
+      it "should be an array" do
+        expect(subject::HTTP_METHODS).to be_a_kind_of(Array)
+      end
+      it "should not be empty" do
+        expect(subject::HTTP_METHODS).to_not be_empty
+      end
+      it "should be frozen" do
+        expect(subject::HTTP_METHODS).to be_frozen
+      end
+    end#HTTP_METHODS
+    context "ENCODINGS" do
+      it "should respond" do
+        expect(subject.constants).to include(:ENCODINGS)
+      end
+      it "should be an array" do
+        expect(subject::ENCODINGS).to be_a_kind_of(Array)
+      end
+      it "should not be empty" do
+        expect(subject::ENCODINGS).to_not be_empty
+      end
+      it "should be frozen" do
+        expect(subject::ENCODINGS).to be_frozen
+      end
+    end#ENCODINGS
+    context "LANGUAGES" do
+      it "should respond" do
+        expect(subject.constants).to include(:LANGUAGES)
+      end
+      it "should be a hash" do
+        expect(subject::LANGUAGES).to be_a_kind_of(Hash)
+      end
+      it "should not be empty" do
+        expect(subject::LANGUAGES).to_not be_empty
+      end
+      it "should be frozen" do
+        expect(subject::LANGUAGES).to be_frozen
+      end
+    end#LANGUAGES
+    context "(scopes)" do
+      before(:each) do
+        @scrap1 = FactoryGirl.create(:visible_scrap, created_at: 30.minutes.ago, updated_at: 10.minutes.ago)
+        @scrap2 = FactoryGirl.create(:visible_scrap, created_at: 20.minutes.ago, updated_at: 1.minute.ago)
+        @scrap3 = FactoryGirl.create(:invisible_scrap, created_at: 10.minutes.ago, updated_at: 5.minutes.ago)
+      end
+      context "(ordering scopes)" do
+        describe "(default scope / .all)" do
+          it "should count three results" do
+            expect(subject.count).to eq(3)
+          end
+          it "should return an ActiveRecord::Relation" do
+            expect(subject.all).to be_a_kind_of(ActiveRecord::Relation)
+          end
+          it "should return results in proper order" do
+            expect(subject.all.to_a).to eq([@scrap1, @scrap2, @scrap3])
+          end# [1,2,3]
+        end#default scope
+        describe ".newest" do
+          it "should respond" do
+            expect(subject).to respond_to(:newest)
+          end
+          it "should return in correct order" do
+            expect(subject.newest.to_a).to eq([@scrap3, @scrap2, @scrap1])
+          end
+        end#.newest
+        describe ".oldest" do
+          it "should respond" do
+            expect(subject).to respond_to(:oldest)
+          end
+          it "should return in correct order" do
+            expect(subject.oldest.to_a).to eq([@scrap1, @scrap2, @scrap3])
+          end
+        end#.oldest
+        describe ".lively" do
+          it "should respond" do
+            expect(subject).to respond_to(:lively)
+          end
+          it "should return in correct order" do
+            expect(subject.lively.to_a).to eq([@scrap2, @scrap3, @scrap1])
+          end
+        end#.lively
+        describe ".stagnant" do
+          it "should respond" do
+            expect(subject).to respond_to(:stagnant)
+          end
+          it "should return in correct order" do
+            expect(subject.stagnant.to_a).to eq([@scrap1, @scrap3, @scrap2])
+          end
+        end#.stagnant
+      end#ordering scopes
+      context "(filtering scopes)" do
+        describe ".visible" do
+          it "should respond" do
+            expect(subject).to respond_to(:visible)
+          end
+          it "should count two results" do
+            expect(subject.visible.count).to be(2)
+          end
+          it "should return in proper order" do
+            expect(subject.visible.to_a).to eq([@scrap1, @scrap2])
+          end
+        end#.visible
+        describe ".invisible" do
+          it "should respond" do
+            expect(subject).to respond_to(:invisible)
+          end
+          it "should count one result" do
+            expect(subject.invisible.count).to be(1)
+          end
+          it "should return in proper order" do
+            expect(subject.invisible.to_a).to eq([@scrap3])
+          end
+        end#.invisible
+      end#filtering scopes
+    end#(scopes)
+  end#(class)
+
+
+  describe "(instance)" do
     subject { FactoryGirl.build(:scrap) }
-    it { expect(subject).to be_valid }
-
-    context "(validations)" do
-      context "endpoint" do
-        it "should not be valid if nil" do
-          subject.endpoint = nil
-          expect(subject).not_to be_valid
+    it "should be valid from FactoryGirl" do
+      expect(subject).to be_valid
+    end
+    context "#user" do
+      it "should respond" do
+        expect(subject).to respond_to(:user)
+      end
+      it "should return a User" do
+        expect(subject.user).to be_a_kind_of(User)
+      end
+      it "should not be valid if nil" do
+        subject.user = nil
+        expect(subject).to_not be_valid
+      end
+    end#user
+    context "#http_method" do
+      it "should respond" do
+        expect(subject).to respond_to(:http_method)
+      end
+      it "should not be valid if nil" do
+        subject.http_method = nil
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if blank" do
+        subject.http_method = ""
+        expect(subject).to_not be_valid
+      end
+      context "(within known values)" do
+        Scrap::HTTP_METHODS.each do |m|
+          it "should be valid as '#{m}'" do
+            subject.http_method = m
+            expect(subject).to be_valid
+          end
+          it "should not be valid as '#{m.downcase}'" do
+            subject.http_method = m.downcase
+            expect(subject).to_not be_valid
+          end
         end
-        it "should not be valid if blank" do
-          subject.endpoint = ""
-          expect(subject).not_to be_valid
+      end#(within known values)
+      context "(outside known values)" do
+        ["GODZILLA","ALIENS","ZEUS"].each do |m|
+          it "should not be valid as '#{m}'" do
+            subject.http_method = m
+            expect(subject).to_not be_valid
+          end
         end
-        it "should be valid with unique string" do
-          subject.endpoint = "very/unique/endpoint/right/here"
-          expect(subject).to be_valid
+      end#(outside known values)
+    end#http_method
+    context "#endpoint" do
+      it "should respond" do
+        expect(subject).to respond_to(:endpoint)
+      end
+      it "should not be valid if nil" do
+        subject.endpoint = nil
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if blank" do
+        subject.endpoint = ""
+        expect(subject).to_not be_valid
+      end
+      context "(dupe/unique)" do
+        before(:each) do
+          @dupe_scrap = FactoryGirl.create(:duplicate_scrap)
         end
-        context "if duplicate" do
-          let(:dupe_scrap) { FactoryGirl.create(:scrap) }
-          before(:each) { subject.endpoint = dupe_scrap.endpoint }
-          context "for same user" do
-            before(:each) { subject.user = dupe_scrap.user }
+        context "(for same user)" do
+          subject { FactoryGirl.build(:duplicate_scrap, user: @dupe_scrap.user) }
+          context "(when duplicate)" do
             it "should not be valid" do
-              expect(subject).not_to be_valid
+              expect(subject).to_not be_valid
             end
           end
-          context "for different user" do
-            before(:each) { subject.user = FactoryGirl.build(:user) }
+          context "(when unique)" do
+            subject { FactoryGirl.create(:scrap) }
             it "should be valid" do
               expect(subject).to be_valid
             end
           end
         end
-      end
-      context "content_type" do
-        it "should not be valid if nil" do
-          subject.content_type = nil
-          expect(subject).not_to be_valid
-        end
-        it "should not be valid if blank" do
-          subject.content_type = ""
-          expect(subject).not_to be_valid
-        end
-        it "should be valid with proper value" do
-          subject.content_type = "text/plain"
-          expect(subject).to be_valid
-        end
-      end
-      context "content_type" do
-        it "should not be valid if nil" do
-          subject.body = nil
-          expect(subject).not_to be_valid
-        end
-        it "should not be valid if blank" do
-          subject.body = ""
-          expect(subject).not_to be_valid
-        end
-        it "should be valid with proper value" do
-          subject.body = "Hello World"
-          expect(subject).to be_valid
-        end
-      end
-      context "status_code" do
-        it "should not be valid if nil" do
-          subject.status_code = nil
-          expect(subject).not_to be_valid
-        end
-        it "should be valid with proper value" do
-          subject.status_code = 500
-          expect(subject).to be_valid
-        end
-      end
-      context "character_encoding" do
-        it "should not be valid if nil" do
-          subject.character_encoding = nil
-          expect(subject).not_to be_valid
-        end
-        it "should not be valid if blank" do
-          subject.character_encoding = ""
-          expect(subject).not_to be_valid
-        end
-        it "should not be valid if not in list of valid values" do
-          subject.character_encoding = "none"
-          expect(subject).not_to be_valid
-        end
-        Scrap::ENCODINGS.each do |encoding|
-          it "should be valid if '#{encoding}'" do
-            subject.character_encoding = encoding
+        context "(for different user)" do
+          before(:each) do
+            @user = FactoryGirl.create(:user)
+          end
+          subject { FactoryGirl.create(:duplicate_scrap, user: @user) }
+          it "should be valid" do
             expect(subject).to be_valid
           end
         end
+      end#(dupe/unique)
+    end#endpoint
+    context "#status_code" do
+      it "should respond" do
+        expect(subject).to respond_to(:status_code)
       end
-    end
-
+      it "should not be valid if nil" do
+        subject.status_code = nil
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if blank" do
+        subject.status_code = ""
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if string" do
+        subject.status_code = "n/a"
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if float" do
+        subject.status_code = 12.34
+        expect(subject).to_not be_valid
+      end
+      it "should be valid if integer" do
+        subject.status_code = 200
+        expect(subject).to be_valid
+      end
+      it "should not be valid if less than 100" do
+        subject.status_code = 99
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if over 599" do
+        subject.status_code = 600
+        expect(subject).to_not be_valid
+      end
+    end#status_code
+    context "#content_type" do
+      it "should respond" do
+        expect(subject).to respond_to(:content_type)
+      end
+      it "should not be valid if nil" do
+        subject.content_type = nil
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if blank" do
+        subject.content_type = ""
+        expect(subject).to_not be_valid
+      end
+    end#status_code
+    context "#body" do
+      it "should respond" do
+        expect(subject).to respond_to(:body)
+      end
+      it "should not be valid if nil" do
+        subject.body = nil
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if blank" do
+        subject.body = ""
+        expect(subject).to_not be_valid
+      end
+    end#body
+    context "#is_public" do
+      it "should respond" do
+        expect(subject).to respond_to(:is_public)
+      end
+      it "should not be valid if nil" do
+        subject.is_public = nil
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if blank" do
+        subject.is_public = ""
+        expect(subject).to_not be_valid
+      end
+    end#is_public
+    context "#description" do
+      it "should respond" do
+        expect(subject).to respond_to(:description)
+      end
+    end#description
+    context "#language" do
+      it "should respond" do
+        expect(subject).to respond_to(:language)
+      end
+      it "should not be valid if nil" do
+        subject.language = nil
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if blank" do
+        subject.language = ""
+        expect(subject).to_not be_valid
+      end
+      context "(within known values)" do
+        Scrap::LANGUAGES.values.each do |lang|
+          it "should be valid as '#{lang}'" do
+            subject.language = lang
+            expect(subject).to be_valid
+          end
+        end
+      end#(within known values)
+      context "(outside known values)" do
+        [ "brainfuck", "gojirra", "lolcat" ].each do |lang|
+          it "should not be valid as '#{lang}'" do
+            subject.language = lang
+            expect(subject).to_not be_valid
+          end
+        end
+      end#(outside known values)
+    end#language
+    context "#character_encoding" do
+      it "should respond" do
+        expect(subject).to respond_to(:character_encoding)
+      end
+      it "should not be valid if nil" do
+        subject.character_encoding = nil
+        expect(subject).to_not be_valid
+      end
+      it "should not be valid if blank" do
+        subject.character_encoding = ""
+        expect(subject).to_not be_valid
+      end
+      context "(within known values)" do
+        Scrap::ENCODINGS.each do |enc|
+          it "should be valid as '#{enc}'" do
+            subject.character_encoding = enc
+            expect(subject).to be_valid
+          end
+        end
+      end#(within known values)
+      context "(outside known values)" do
+        [ "UTF-7", "UTF-15", "ISO-8859-0" ].each do |enc|
+          it "should not be valid as '#{enc}'" do
+            subject.character_encoding = enc
+            expect(subject).to_not be_valid
+          end
+        end
+      end#(outside known values)
+    end#character_encoding
+    context "#uid" do
+      it "should respond" do
+        expect(subject).to respond_to(:uid)
+      end
+    end#uid
+    describe "#generate_uid!" do
+      it "should respond" do
+        expect(subject).to respond_to(:generate_uid!)
+      end
+      it "should change the value of uid" do
+        old_uid = subject.uid
+        subject.generate_uid!
+        expect(subject.uid).to_not eq(old_uid)
+      end
+    end#generate_uid!
+    describe "#ensure_uid!" do
+      it "should respond" do
+        expect(subject).to respond_to(:ensure_uid!)
+      end
+      it "should set uid when blank" do
+        subject.uid = nil
+        subject.ensure_uid!
+        expect(subject.uid).to_not be_blank
+      end
+      it "should not set uid when not blank" do
+        subject.uid = "foobar"
+        subject.ensure_uid!
+        expect(subject.uid).to eq("foobar")
+      end
+      context "when validating" do
+        it "should be called" do
+          allow(subject).to receive(:ensure_uid!)
+          subject.valid?
+          expect(subject).to have_received(:ensure_uid!)
+        end
+        it "should set uid" do
+          expect(subject.uid).to be_blank
+          subject.valid?
+          expect(subject.uid).not_to be_blank
+        end
+      end
+    end#ensure_uid!
+    describe "#http_headers" do
+      it "should be a hash" do
+        expect(subject.http_headers).to be_a_kind_of(Hash)
+      end
+      context "(return value)" do
+        let(:headers) { subject.http_headers }
+        it { expect(headers["Content-Type"]).to eq(subject.content_type) }
+      end
+    end#http_headers
     describe "#to_param" do
-      it "should equal #endpoint" do
-        expect(subject.to_param).to eq(subject.endpoint)
+      it "should equal #uid" do
+        expect(subject.to_param).to eq(subject.uid)
       end
-    end
-    describe "#user" do
-      it { expect(subject).to respond_to(:user) }
-    end
-
+    end#to_param
     describe "#render_options" do
+      it "should respond" do
+        expect(subject).to respond_to(:render_options)
+      end
       it "should be a hash" do
         expect(subject.render_options).to be_a_kind_of(Hash)
+      end
+      it "should not be empty" do
+        expect(subject.render_options).to_not be_empty
       end
       context "(return value)" do
         let(:opts) { subject.render_options }
@@ -149,15 +456,50 @@ describe Scrap do
         it { expect(opts[:status]).to eq(subject.status_code) }
       end
     end#render_options
-
-    describe "#http_headers" do
-      it "should be a hash" do
-        expect(subject.http_headers).to be_a_kind_of(Hash)
+    describe "#body_lines" do
+      it "should respond" do
+        expect(subject).to respond_to(:body_lines)
       end
-      context "(return value)" do
-        let(:headers) { subject.http_headers }
-        it { expect(headers["Content-Type"]).to eq(subject.content_type) }
+      it "should return an array" do
+        expect(subject.body_lines).to be_a_kind_of(Array)
       end
-    end
-  end
+      context 'given (\r\n) in body' do
+        before(:each) { subject.body = "foo\r\nbar" }
+        it "should return expected results" do
+          expect(subject.body_lines).to eq(["foo", "bar"])
+        end
+      end
+      context 'given (\r) in body' do
+        before(:each) { subject.body = "foo\rbar" }
+        it "should return expected results" do
+          expect(subject.body_lines).to eq(["foo", "bar"])
+        end
+      end
+      context 'given (\n) in body' do
+        before(:each) { subject.body = "foo\nbar" }
+        it "should return expected results" do
+          expect(subject.body_lines).to eq(["foo", "bar"])
+        end
+      end
+    end#body_lines
+    describe "#truncate_body" do
+      before(:each) do
+        fake_lines = ["1", "2", "3", "4", "5"]
+        allow(subject).to receive(:body_lines).and_return(fake_lines)
+      end
+      it "should respond" do
+        expect(subject).to respond_to(:truncate_body)
+      end
+      context "given 3 lines" do
+        it "should return expected" do
+          expect(subject.truncate_body(3)).to eq("1\n2\n3\n...")
+        end
+      end
+      context "given 10 lines" do
+        it "should return expected" do
+          expect(subject.truncate_body(10)).to eq("1\n2\n3\n4\n5")
+        end
+      end
+    end#truncate_body
+  end#(instance)
 end

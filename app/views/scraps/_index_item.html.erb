@@ -1,0 +1,39 @@
+<% scrap = index_item %>
+<div class="media">
+  <div class="pull-left text-center">
+    <div>
+      <% if scrap.user.avatar_url.blank? %>
+        <%= image_tag "user_icon.png" %>
+      <% else %>
+        <%= image_tag scrap.user.avatar_url, class: "avatar avatar-medium img-rounded" %>
+      <% end %>
+    </div>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">
+      <%= link_to scrap.user.username, user_scraps_path(scrap.user) %>
+      /
+      <%= link_to "#{truncate(scrap.endpoint, length: 40, omission: "...")}", user_scrap_path(scrap.user, scrap) %>
+      <br />
+      <small>
+        <%= method_label(scrap.http_method) %>
+        <span class="fa fa-long-arrow-right"></span>
+        <%= status_label(scrap.status_code) %>
+        <code><%= scrap.content_type %></code>
+      </small>
+    </h4>
+    <p>
+      <% unless scrap.description.blank? %>
+        <%= scrap.description %> -
+      <% end %>
+      <small class="text-muted">
+        <span class="fa fa-fw fa-save"></span>
+        <em><%= time_ago_in_words(scrap.updated_at) %> ago</em>
+      </small>
+      <% if !scrap.is_public? %>
+        - <span class="label label-default">Invisible</span>
+      <% end %>
+    </p>
+    <pre><code class="<%= scrap.language %>"><%= scrap.truncate_body(4) %></code></pre>
+  </div><!-- .media-body -->
+</div><!-- .media -->

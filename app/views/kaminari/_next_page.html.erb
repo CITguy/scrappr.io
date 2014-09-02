@@ -1,0 +1,4 @@
+<% dclass = current_page.last? ? 'disabled' : '' %>
+<%= link_to url, remote: remote, class: "btn btn-default #{dclass}" do %>
+  Older <span class="fa fa-chevron-right"></span>
+<% end %>
