@@ -150,6 +150,13 @@ $editor-menu-bg: darken($editor-border, 20%);
       height: 300px;
     }
   }//.workspace-row
+  .status-bar {
+    border-top: 1px solid $editor-menu-bg;
+    background-color: $editor-border;
+    padding: 2px;
+    font-family: monospace;
+    font-size: 0.7em;
+  }
 }//.scrap-editor
 
 img {

@@ -20,5 +20,9 @@ Rails.application.routes.draw do
     match ":user_id/api/*endpoint" => "scraps#show", via: :all, as: :endpoint
   end
 
+  namespace :api do
+    resources :users, only: [:update]
+  end
+
   root to: "public/scraps#index"
 end

@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require _config
 //= require _ace
 //= require _select2
 //= require _highlight
