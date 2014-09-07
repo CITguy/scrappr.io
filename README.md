@@ -13,8 +13,6 @@
 
 ### TODO
 
-* Write Controller Specs
-* Add support for HTTP Methods other than GET in `/users/api/scraps_controller.rb`
 * Add Support to Add/Remove HTTP Headers from `/users/scraps#show > headers`
 * Write ROADMAP.md
 * Add more stuff to README
