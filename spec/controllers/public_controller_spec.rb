@@ -1,5 +1,5 @@
 require 'rails_helper'
 
 describe PublicController do
-  # Intentionally left blank
+  # nothing to test
 end

@@ -36,6 +36,9 @@ describe User do
       it "should respond" do
         expect(subject).to respond_to(:from_omniauth)
       end
+      it "should not error" do
+        expect{ subject.from_omniauth(fake_auth) }.to_not raise_error
+      end
       it "should call .where with proper variables" do
         arb = ActiveRecord::Base
         allow(arb).to receive(:first_or_create).and_yield(User.new)
@@ -65,25 +68,6 @@ describe User do
         end
       end
     end#.from_omniauth
-    context ".from_param" do
-      it "should respond" do
-        expect(subject).to respond_to(:from_param)
-      end
-      it "should return an ActiveRelation object" do
-        user = FactoryGirl.create(:user)
-        expect(subject.from_param(user.username)).to be_a_kind_of(ActiveRecord::Relation)
-      end
-      it "should call #where" do
-        allow(subject).to receive(:where)
-        subject.from_param("foobar")
-        expect(subject).to have_received(:where)
-      end
-      it "should call #where with expected arguments" do
-        allow(subject).to receive(:where)
-        subject.from_param("foobar")
-        expect(subject).to have_received(:where).with({:username => "foobar"})
-      end
-    end#.from_param
   end#(class)
 
   describe "(instance)" do
@@ -238,7 +222,7 @@ describe User do
         expect(ability).to be_able_to(:read, Scrap)
       end
       it "should be able to create a Scrap" do
-        expect(ability).to_not be_able_to(:create, Scrap)
+        expect(ability).to be_able_to(:create, Scrap)
       end
       context "for scraps they own" do
         let(:scrap) { FactoryGirl.build(:scrap, user: user) }

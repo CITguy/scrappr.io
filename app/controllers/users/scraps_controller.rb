@@ -1,32 +1,45 @@
 class Users::ScrapsController < UsersController
-  before_action :fetch_user
-
-  UNAUTHORIZED_MESSAGE = "Shame on you! Don't mess with other people's stuff!"
-  rescue_from CanCan::AccessDenied do |exception|
-    redirect_to main_app.user_scraps_path(@user), :alert => UNAUTHORIZED_MESSAGE
-  end
-
-  before_action :fetch_scrap, only: [:show, :edit, :update, :destroy]
+  include UserResource
 
   def index
     base_condition = (viewing_own_resource? ? @user.scraps : @user.scraps.visible)
     @scraps = base_condition.lively
-  end
+  end#index
+
 
   def show
-  end
+    @scrap = @user.scraps.find(params[:id])
+  rescue ActiveRecord::RecordNotFound => err
+    redirect_to user_scraps_path(@user), alert: "Scrap Not Found"
+  end#show
+
+
+  def raw
+    @scrap = @user.scraps.find(params[:id])
+    render text: @scrap.body, content_type: "text/plain"
+  rescue ActiveRecord::RecordNotFound => err
+    render text: "Scrap Not Found", status: 404, content_type: "text/plain"
+  end#raw
+
+########################################
+## Authorized with CanCanCan
+########################################
 
   def new
-    #authorize! :create, Scrap
     @scrap = @user.scraps.build
-  end
+    authorize! :create, @scrap
+  end#new
+
 
   def edit
+    @scrap = @user.scraps.find(params[:id])
     authorize! :edit, @scrap
-  end
+  end#edit
+
 
   def create
     @scrap = @user.scraps.new(scrap_attributes)
+    authorize! :create, @scrap
     if @scrap.save
       flash[:notice] = "Scrap Saved"
       redirect_to user_scrap_path(@user, @scrap)
@@ -36,18 +49,23 @@ class Users::ScrapsController < UsersController
     end
   end
 
+
   def update
-    @scrap.update_attributes(scrap_attributes)
-    if @scrap.save
+    @scrap = @user.scraps.find(params[:id])
+    authorize! :update, @scrap
+    if @scrap.update_attributes(scrap_attributes)
       flash[:notice] = "Scrap Updated"
       redirect_to user_scrap_path(@user, @scrap)
     else
       flash.now[:alert] = "Scrap Could not be updated: #{@scrap.errors.full_messages}"
       render :edit
     end
-  end
+  end#update
+
 
   def destroy
+    @scrap = @user.scraps.find(params[:id])
+    authorize! :destroy, @scrap
     if @scrap.destroy
       flash[:notice] = "Scrap destroyed"
       redirect_to user_scraps_path(@user)
@@ -55,21 +73,10 @@ class Users::ScrapsController < UsersController
       flash[:alert] = "Could not destroy scrap"
       redirect_to user_scrap_path(@user, @scrap)
     end
-  end
+  end#destroy
 
-  def raw
-    @scrap = @user.scraps.find(params[:id])
-    render text: @scrap.body, content_type: :plain
-  rescue ActiveRecord::RecordNotFound => err
-    render text: "Scrap Not Found", status: 404, content_type: :plain
-  end
 
-  protected
-  def fetch_scrap
-    @scrap = @user.scraps.find(params[:id])
-  end
-
-  private
+  #private
   def scrap_attributes
     params.require(:scrap).permit(
       :http_method,

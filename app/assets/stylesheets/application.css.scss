@@ -10,17 +10,15 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_self
- * require select2
+ * http://getbootstrap.com
+ *= require bootstrap
+ *
+ * http://fontawesome.github.io/Font-Awesome/
+ *= require fontawesome
+ *
+ *= require select2
+ *= require select2-bootstrap
+ *
+ *= require _theme
+ *= require highlightjs/github
  */
-// http://getbootstrap.com
-@import "bootstrap/index.css";
-// http://fortawesome.github.io/Font-Awesome/
-@import "fontawesome/index.css";
-
-@import "select2.css";
-@import "select2-bootstrap.css";
-
-
-@import "theme";
-@import "highlight";

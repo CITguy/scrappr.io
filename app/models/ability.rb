@@ -11,7 +11,7 @@ class Ability
 
     # AUTHENTICATED USER ACCESS
     if user
-      can :modify, Scrap do |scrap|
+      can :manage, Scrap do |scrap|
         scrap.user == user
       end
     end#authenticated

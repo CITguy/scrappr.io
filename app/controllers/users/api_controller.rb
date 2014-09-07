@@ -1,11 +1,10 @@
-# TODO: AUTHENTICATED CONTROLLER OF SOME SORT
-class Users::ApiController < UsersController
-  before_action :fetch_user
+# TODO: Turn into base for USER/API authentication
+class Users::ApiController < ApplicationController
+  include UserResource
 
   layout :false
 
-  # TODO: TEST
-  def invalid_path(ilk="Endpoint")
+  def invalid_path(ilk)
     render plain: "Unknown #{ilk}", status: 404
   end#invalid_path
 end

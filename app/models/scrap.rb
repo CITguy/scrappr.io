@@ -46,7 +46,9 @@ class Scrap < ActiveRecord::Base
 
   validates :endpoint,
             presence: true,
-            uniqueness: { scope: [:user] } # TODO: TEST
+            uniqueness: {
+              scope: [:user, :http_method]
+            }
 
   validates :status_code,
             numericality: {

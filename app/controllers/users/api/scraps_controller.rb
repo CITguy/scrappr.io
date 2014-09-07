@@ -1,11 +1,18 @@
 class Users::Api::ScrapsController < Users::ApiController
-  # TODO: TEST
+  skip_before_filter :verify_authenticity_token
+
   def show
-    if @scrap = @user.scraps.where(endpoint: params[:endpoint]).first
+    @scrap = Scrap.find_by({
+      user: @user,
+      http_method: request.method,
+      endpoint: params[:endpoint]
+    })
+
+    if @scrap
       response.headers.merge!(@scrap.http_headers)
       render @scrap.render_options
     else
-      invalid_path("Scrap") if Rails.env.development?
+      invalid_path("Endpoint")
     end
   end#show
 end

@@ -43,20 +43,16 @@ class User < ActiveRecord::Base
   # @return [User]
   def self.from_omniauth(auth)
     Rails.logger.debug("OAUTH: #{auth.inspect}")
-    where(auth.slice(:provider, :uid)).first_or_create do |user|
+    # Modified due to change in Railties 4.1.5 regarding CVE-2014-3514
+    params = ActionController::Parameters.new(user: auth.slice(:provider, :uid))
+    permitted = params.require(:user).permit(:provider, :uid)
+
+    where(permitted).first_or_create do |user|
       user.provider = auth.provider
       user.uid = auth.uid
       user.username = auth.info.nickname
     end
   end#self.from_omniauth
-
-
-  # @param [String] slug String value to match username against
-  #
-  # @return [ActiveRecord::Relation]
-  def self.from_param(slug)
-    where(username: slug)
-  end#self.from_param
 
 
   # Generate full URL to avatar image from provider

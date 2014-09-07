@@ -1,5 +1,5 @@
 require "rails_helper"
 
-describe ApplicationController do
+describe ApiController do
   # nothing to test
 end

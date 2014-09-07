@@ -75,6 +75,7 @@ describe Scrap do
     end#LANGUAGES
     context "(scopes)" do
       before(:each) do
+        Scrap.destroy_all
         @scrap1 = FactoryGirl.create(:visible_scrap, created_at: 30.minutes.ago, updated_at: 10.minutes.ago)
         @scrap2 = FactoryGirl.create(:visible_scrap, created_at: 20.minutes.ago, updated_at: 1.minute.ago)
         @scrap3 = FactoryGirl.create(:invisible_scrap, created_at: 10.minutes.ago, updated_at: 5.minutes.ago)
@@ -214,34 +215,33 @@ describe Scrap do
         subject.endpoint = ""
         expect(subject).to_not be_valid
       end
-      context "(dupe/unique)" do
+      context "(duplicate scrap)" do
         before(:each) do
-          @dupe_scrap = FactoryGirl.create(:duplicate_scrap)
+          @existing_scrap = FactoryGirl.create(:duplicate_scrap)
         end
-        context "(for same user)" do
-          subject { FactoryGirl.build(:duplicate_scrap, user: @dupe_scrap.user) }
-          context "(when duplicate)" do
-            it "should not be valid" do
-              expect(subject).to_not be_valid
-            end
-          end
-          context "(when unique)" do
-            subject { FactoryGirl.create(:scrap) }
-            it "should be valid" do
-              expect(subject).to be_valid
-            end
-          end
+        subject { FactoryGirl.build(:duplicate_scrap, user: @existing_scrap.user) }
+        it "should not be valid" do
+          expect(subject).to_not be_valid
         end
-        context "(for different user)" do
-          before(:each) do
-            @user = FactoryGirl.create(:user)
-          end
-          subject { FactoryGirl.create(:duplicate_scrap, user: @user) }
+        context "with unique http method" do
           it "should be valid" do
+            subject.http_method = "POST"
             expect(subject).to be_valid
           end
         end
-      end#(dupe/unique)
+        context "with unique user" do
+          it "should be valid" do
+            subject.user = FactoryGirl.create(:user)
+            expect(subject).to be_valid
+          end
+        end
+        context "with unique endpoint value" do
+          it "should be valid" do
+            subject.endpoint += "unique"
+            expect(subject).to be_valid
+          end
+        end
+      end#(duplicate scrap)
     end#endpoint
     context "#status_code" do
       it "should respond" do

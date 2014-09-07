@@ -43,6 +43,7 @@ FactoryGirl.define do
 
     factory :duplicate_scrap do
       endpoint "wakka/wakka/wakka"
+      http_method "GET"
     end
   end
 end

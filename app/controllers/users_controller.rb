@@ -1,16 +1,17 @@
 class UsersController < ApplicationController
+  include UserResource
 
-  protected
-  # TODO: TEST
-  def fetch_user
-    @user = User.from_param(params[:user_id]).first!
-  rescue => e
-    redirect_to root_path, alert: "Invalid Path"
-  end#fetch_user
+  UNAUTHORIZED_MESSAGE = "Shame on you! Please play with your own stuff!"
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to main_app.user_scraps_path(@user), :alert => UNAUTHORIZED_MESSAGE
+  end
 
-  # TODO: TEST
+
+  # SHARED METHODS
+
+  # @return [Boolean]
   def viewing_own_resource?
-    false unless current_user
-    current_user == @user
+    return false unless current_user
+    current_user.username == params[:user_id]
   end#viewing_own_resource?
 end

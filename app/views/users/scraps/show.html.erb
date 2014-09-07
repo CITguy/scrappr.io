@@ -34,9 +34,9 @@
     </div>
     <div class="col-sm-4 text-right">
       <% if can?(:modify, @scrap) %>
-          <%= link_to raw_user_scrap_path(@user, @scrap), class: "btn btn-default", target: :blank do %>
-            <span class="fa fa-file-text-o fa-fw"></span> Raw
-          <% end %>
+        <%= link_to raw_user_scrap_path(@user, @scrap), class: "btn btn-default", target: :blank do %>
+          <span class="fa fa-file-text-o fa-fw"></span> Raw
+        <% end %>
         <div class="btn-group">
           <%= link_to edit_user_scrap_path(@user, @scrap), class: 'btn btn-default' do %>
             <span class="fa fa-pencil"></span>&nbsp; Edit
