@@ -1,10 +1,10 @@
 <% content_for :subnav do %>
-  <div class="media">
-    <% if current_user != @user %>
-      <%= render partial: "avatar", locals: { user: @user } %>
-    <% end %>
-    <div class="media-body">
-      <div class="col-md-8">
+  <div class="col-md-9">
+    <div class="media">
+      <% if current_user != @user %>
+        <%= render partial: "avatar", locals: { user: @user } %>
+      <% end %>
+      <div class="media-body">
         <% if current_user == @user %>
           <div class="metadata">
             <span class="meta-title">Your Scraps</span>
@@ -23,21 +23,34 @@
           </small>
         <% end %>
       </div>
-      <div class="col-md-4">
-        <!-- for future use -->
-      </div>
     </div>
-  </div>
+  </div><!-- .col-md-9 -->
+  <div class="col-md-3 text-right">
+    <%= render "scrap_sorter" %>
+  </div><!-- .col-md-3 -->
 <% end %>
 
-<div class="col-md-9">
-  <% if Array(@scraps).empty? %>
-    <p>No scraps... how boring</p>
-  <% else %>
-    <%= render partial: "scraps/index_item", collection: @scraps %>
-  <% end %>
+<div class="col-md-3 col-md-push-9">
+  <div class="tabs-right">
+    <ul class="nav nav-pills nav-stacked" role="tablist">
+      <li class="active">
+        <%= link_to "#pane-all" do %>
+          <span class="fa fa-fw fa-code"></span>
+          <strong>All Scraps</strong>
+        <% end %>
+      </li>
+    </ul>
+  </div>
 </div>
-<div class="col-md-3">
-  <!-- Reserved for Sorting/Filtering -->
+<div class="col-md-9 col-md-pull-3">
+  <div class="tab-content">
+    <div class="tab-pane fade in active" id="pane-all">
+      <% if Array(@scraps).empty? %>
+        <p>No scraps... how boring</p>
+      <% else %>
+        <%= render partial: "scraps/index_item", collection: @scraps %>
+      <% end %>
+    </div>
+  </div>
 </div>
 

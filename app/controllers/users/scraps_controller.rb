@@ -1,9 +1,10 @@
 class Users::ScrapsController < UsersController
   include UserResource
+  include ScrapSorting
 
   def index
-    base_condition = (viewing_own_resource? ? @user.scraps : @user.scraps.visible)
-    @scraps = base_condition.lively
+    arel = (viewing_own_resource? ? @user.scraps : @user.scraps.visible)
+    @scraps = apply_sorting(arel, params[:sort])
   end#index
 
 

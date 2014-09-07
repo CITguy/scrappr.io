@@ -3,6 +3,8 @@ require "rails_helper"
 describe Users::ScrapsController do
   include Devise::TestHelpers
 
+  include_examples "sorting scraps"
+
   before(:each) do
     @user = FactoryGirl.create(:user)
     @scrap = FactoryGirl.create(:visible_scrap, user: @user)
@@ -14,25 +16,57 @@ describe Users::ScrapsController do
   it { expect(@user.scraps.count).to eq(5) }
 
   describe "GET #index" do
+    before(:each) do
+      allow(controller).to receive(:apply_sorting).and_call_original
+    end
+    let(:get_index) { get :index, user_id: @user }
     it "sets @scraps" do
-      get :index, user_id: @user
+      get_index
       expect(assigns(:scraps)).to_not be_nil
     end
     it "displays 5 scraps when viewed by owner" do
       allow(controller).to receive(:current_user) { @user }
-      get :index, user_id: @user
+      get_index
       expect(assigns(:scraps).count).to eq(5)
     end
     it "displays 2 scraps when viewed by another user" do
       allow(controller).to receive(:current_user) { FactoryGirl.create(:user) }
-      get :index, user_id: @user
+      get_index
       expect(assigns(:scraps).count).to eq(2)
     end
     it "displays 2 scraps when viewed by guest user" do
       allow(controller).to receive(:current_user) { nil }
-      get :index, user_id: @user
+      get_index
       expect(assigns(:scraps).count).to eq(2)
     end
+    it "calls #apply_sorting" do
+      get_index
+      expect(controller).to have_received(:apply_sorting)
+    end
+    it "calls #apply_sorting with expected arguments" do
+      get_index
+      expect(controller).to have_received(:apply_sorting).with(Scrap.visible, nil)
+    end
+    context "with sorting param" do
+      %w[
+        created_asc
+        created_desc
+        updated_asc
+        updated_desc
+        foobar
+      ].each do |sort|
+        context "of '#{sort}'" do
+          let(:get_sorted_index) { get :index, user_id: @user, sort: sort }
+          it "doesn't error" do
+            expect{ get_sorted_index }.to_not raise_error
+          end
+          it "calls apply_sorting with expected arguments" do
+            get_sorted_index
+            expect(controller).to have_received(:apply_sorting).with(Scrap.visible, sort)
+          end
+        end
+      end
+    end#with sorting param
   end#GET #index
 
   describe "GET #show" do

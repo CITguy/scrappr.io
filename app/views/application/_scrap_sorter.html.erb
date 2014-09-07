@@ -1,0 +1,40 @@
+<%
+  sort_lbl = case params[:sort]
+             when "created_asc"  then "Oldest"
+             when "created_desc" then "Newest"
+             when "updated_asc"  then "Stagnant"
+             when "updated_desc" then "Freshest"
+             else "Freshest"
+             end
+%>
+<span class="btn btn-link" disabled>
+  <%= sort_lbl %> Scraps
+</span>
+
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <strong>Sort</strong>
+    <span class="fa fa-fw fa-sort"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right" role="menu">
+    <li><%= link_to sort: "created_desc" do %>
+      <span class="fa fa-sort-numeric-desc"></span>
+      Newest
+    <% end %></li>
+    <li><%= link_to sort: "created_asc" do %>
+      <span class="fa fa-sort-numeric-asc"></span>
+      Oldest
+    <% end %></li>
+
+    <li class="divider"></li>
+
+    <li><%= link_to sort: "updated_desc" do %>
+      <span class="fa fa-sort-amount-desc"></span>
+      Freshest
+    <% end %></li>
+    <li><%= link_to sort: "updated_asc" do %>
+      <span class="fa fa-sort-amount-asc"></span>
+      Stagnant
+    <% end %></li>
+  </ul>
+</div>

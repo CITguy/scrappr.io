@@ -1,6 +1,8 @@
 class Public::ScrapsController < PublicController
+  include ScrapSorting
+
   def index
-    filtered_scraps = Scrap.visible.lively
-    @scraps = filtered_scraps.page(params[:page])
-  end
+    arel = apply_sorting(Scrap.visible, params[:sort])
+    @scraps = arel.page(params[:page])
+  end#index
 end

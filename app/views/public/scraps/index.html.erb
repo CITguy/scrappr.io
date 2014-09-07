@@ -4,19 +4,34 @@
       <span class="meta-title">Browse Scraps</span>
     </div>
   </div>
-  <div class="col-md-3">
-    <!-- TOOD: scrap ordering options -->
+  <div class="col-md-3 text-right">
+    <%= render "scrap_sorter" %>
   </div>
 <% end %>
 
-<div class="col-md-9">
-  <% if Array(@scraps).empty? %>
-    <p>No scraps... how boring</p>
-  <% else %>
-    <%= render partial: "scraps/index_item", collection: @scraps %>
-    <%= paginate @scraps %>
-  <% end %>
-</div>
-<div class="col-md-3">
-  <!-- Reserved for Sorting/Filtering -->
+<div class="row">
+  <div class="col-md-3 col-md-push-9">
+    <div class="tabs-right border-left">
+      <ul class="tabbed-nav nav nav-tabs nav-stacked" role="tablist">
+        <li class="active">
+          <%= link_to "#pane-all" do %>
+            <span class="fa fa-fw fa-code"></span>
+            <strong>All Scraps</strong>
+          <% end %>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-9 col-md-pull-3">
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="pane-all">
+        <% if Array(@scraps).empty? %>
+          <p>No scraps... how boring</p>
+        <% else %>
+          <%= render partial: "scraps/index_item", collection: @scraps %>
+          <%= paginate @scraps %>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
