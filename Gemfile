@@ -3,8 +3,8 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~>4.1.0'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+# Use mysql2 as the database for Active Record
+gem 'mysql2'
 # Use SCSS for stylesheets
 gem 'sass-rails'#, '~> 4.0.3'
 # Use Uglifier as compressor for JavaScript assets
@@ -42,6 +42,7 @@ gem 'cancancan'
 gem 'less-rails'
 gem 'kaminari', github: "amatsuda/kaminari"
 
+
 group :test, :development do
   gem "factory_girl_rails", "~> 4.0"
   gem 'rspec-rails'
@@ -53,4 +54,10 @@ group :development do
   gem 'redcarpet'
   gem 'guard'
   gem 'guard-rspec'
+
+  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-rbenv'
+  gem 'capistrano-bundler'
+  gem 'capistrano3-unicorn'
 end

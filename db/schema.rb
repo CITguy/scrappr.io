@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20140902035430) do
     t.string   "uid",                                             null: false
   end
 
-  add_index "scraps", ["uid"], name: "index_scraps_on_uid", unique: true
+  add_index "scraps", ["uid"], name: "index_scraps_on_uid", unique: true, using: :btree
 
   create_table "status_codes", force: true do |t|
     t.integer "number",                      null: false
