@@ -5,6 +5,7 @@
 # property set.  Don't declare `role :all`, it's a meta role.
 
 set :rails_env, "staging"
+set :unicorn_config_path, File.join(current_path, "config", "unicorn", "staging.rb")
 
 stage_servers = DEPLOY["staging"]["servers"].map do |svr|
   "#{fetch(:user)}@#{svr}:#{fetch(:port)}"

@@ -46,7 +46,7 @@ set :rbenv_roles, :all
 ## UNICORN CONFIGS
 # (https://github.com/tablexi/capistrano3-unicorn)
 set :unicorn_pid, File.join(current_path, "tmp", "pids", "unicorn.pid")
-set :unicorn_config_path, File.join(current_path, "config", "unicorn", "#{fetch(:rails_env)}.rb")
+# set :unicorn_config_path, File.join(current_path, "config", "unicorn", "#{fetch(:rails_env)}.rb")
 # set :unicorn_restart_sleep_time, 3
 # set :unicorn_roles, :app
 # set :unicorn_options, ""
