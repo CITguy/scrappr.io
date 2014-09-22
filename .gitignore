@@ -16,4 +16,8 @@
 /tmp
 
 *.swp
+*/*.swp
 .DS_Store
+
+config/app_config.local.yml
+config/deploy.yml
