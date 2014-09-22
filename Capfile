@@ -1,6 +1,6 @@
 require 'yaml'
 begin
-  DEPLOY = YAML::load( File.open("./config/deploy.yml") )
+  PRIVATE = YAML::load( File.open("./config/private.yml") )
 rescue Errno::ENOENT => err
   puts "Missing config/deploy.yml"
   exit

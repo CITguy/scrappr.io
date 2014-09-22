@@ -7,7 +7,7 @@
 set :rails_env, "staging"
 set :unicorn_config_path, File.join(current_path, "config", "unicorn", "staging.rb")
 
-stage_servers = DEPLOY["staging"]["servers"].map do |svr|
+stage_servers = PRIVATE["deploy"]["staging"]["servers"].map do |svr|
   "#{fetch(:user)}@#{svr}:#{fetch(:port)}"
 end
 

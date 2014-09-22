@@ -2,8 +2,8 @@
 lock '3.2.1'
 
 set :apps_dir, "/srv/http"
-set :user, DEPLOY["user"]
-set :port, DEPLOY["port"]
+set :user, PRIVATE["deploy"]["user"]
+set :port, PRIVATE["deploy"]["port"]
 
 set :application, 'scrappr.io'
 set :repo_url, 'https://github.com/CITguy/scrappr.io.git'
@@ -15,6 +15,7 @@ set :format, :pretty
 set :linked_files, %w[
   config/database.yml
   config/app_config.local.yml
+  config/private.yml
 ]
 set :keep_releases, 3
 set :pty, true
@@ -84,12 +85,9 @@ namespace :rails do
   end#:console
 end#:rails
 
-namespace :ping do
-  task :pong do
-    on roles(:app) do
-      exec :hostname
-      exec :whoami
-    end
+task :ping do
+  on roles(:app) do
+    execute :echo, "PONG `whoami`@`hostname`"
   end
 end
 
@@ -103,7 +101,17 @@ namespace :deploy do
       end
     end
   end#:ensure_local_app_config
-  before "deploy:check:linked_files", :ensure_local_app_config
 
+
+  desc "upload private.yml required for application to function"
+  task :upload_private do
+    on roles(:app) do
+      upload! "config/private.yml", File.join(deploy_to, "shared", "config", "private.yml")
+    end
+  end#:upload_private
+
+
+  before "deploy:check:linked_files", :ensure_local_app_config
+  before "deploy:check:linked_files", :upload_private
   after :publishing, "unicorn:restart"
 end#:deploy
