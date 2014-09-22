@@ -1,12 +1,9 @@
 #= require ace/ace
-#
-#= require ace/theme-textmate
-#= require ace/theme-merbivore
-#= require ace/theme-github
-#= require ace/theme-twilight
-#
-#= require ace/mode-json
-#= require ace/mode-javascript
-#= require ace/mode-plain_text
-#= require ace/mode-html
-#= require ace/mode-xml
+#= require_self
+
+## These are needed to get around the dumb that is asset pipeline
+# https://github.com/ajaxorg/ace/issues/655
+ace.config.set("basePath", "/ace")
+ace.config.set("modePath", "/ace/modes")
+ace.config.set("themePath", "/ace/themes")
+ace.config.set("workerPath", "/ace/workers")
