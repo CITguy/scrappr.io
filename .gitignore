@@ -18,6 +18,7 @@
 *.swp
 */*.swp
 .DS_Store
+.powenv
 
 config/app_config.local.yml
 config/deploy.yml
