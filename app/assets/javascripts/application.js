@@ -17,5 +17,6 @@
 //= require _select2
 //= require _highlight
 //= require ./bootstrap
+//= require _custom
 //
 //= require ko

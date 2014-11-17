@@ -20,7 +20,9 @@
         </select>
       </div>
     </div>
-    <div class="col-sm-3"></div>
+    <div class="col-sm-3">
+      &nbsp;
+    </div>
     <div class="col-sm-4"><!-- LANGUAGE SELECT -->
       <div class="input-group select2-bootstrap-prepend">
         <span class="input-group-addon">
@@ -46,8 +48,15 @@
     </div>
   </div><!-- /.workspace-row -->
 
-  <div class="status-bar text-right">
+  <div class="status-bar">
+    <div class="col-xs-3 text-left">
+      <a href="<%= help_liquid_variables_path %>" class="popup-link">
+        <span class="fa fa-info-circle" style="font-weight: 1.5em"></span>
+        Variables
+      </a>
+    </div>
+    <div class="col-xs-9 text-right">
       <span class="status-message" data-bind="text: status_message"></span>
-      &nbsp;
+    </div>
   </div>
 </div>

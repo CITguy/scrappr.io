@@ -81,17 +81,6 @@ describe Scrap do
         @scrap3 = FactoryGirl.create(:invisible_scrap, created_at: 10.minutes.ago, updated_at: 5.minutes.ago)
       end
       context "(ordering scopes)" do
-        describe "(default scope / .all)" do
-          it "should count three results" do
-            expect(subject.count).to eq(3)
-          end
-          it "should return an ActiveRecord::Relation" do
-            expect(subject.all).to be_a_kind_of(ActiveRecord::Relation)
-          end
-          it "should return results in proper order" do
-            expect(subject.all.to_a).to eq([@scrap1, @scrap2, @scrap3])
-          end# [1,2,3]
-        end#default scope
         describe ".newest" do
           it "should respond" do
             expect(subject).to respond_to(:newest)
@@ -133,9 +122,6 @@ describe Scrap do
           it "should count two results" do
             expect(subject.visible.count).to be(2)
           end
-          it "should return in proper order" do
-            expect(subject.visible.to_a).to eq([@scrap1, @scrap2])
-          end
         end#.visible
         describe ".invisible" do
           it "should respond" do
@@ -143,9 +129,6 @@ describe Scrap do
           end
           it "should count one result" do
             expect(subject.invisible.count).to be(1)
-          end
-          it "should return in proper order" do
-            expect(subject.invisible.to_a).to eq([@scrap3])
           end
         end#.invisible
       end#filtering scopes
@@ -455,6 +438,12 @@ describe Scrap do
         it { expect(opts[:content_type]).to eq(subject.content_type) }
         it { expect(opts[:status]).to eq(subject.status_code) }
       end
+      it 'should pass :liquid value to #liquid_body' do
+        liquid_opts = { 'foo' => 'bar' }
+        allow(subject).to receive(:liquid_body)
+        subject.render_options({:liquid => liquid_opts})
+        expect(subject).to have_received(:liquid_body).with(liquid_opts)
+      end
     end#render_options
     describe "#body_lines" do
       it "should respond" do
@@ -501,5 +490,29 @@ describe Scrap do
         end
       end
     end#truncate_body
+    describe "#liquid_body" do
+      before(:each) do
+        subject.body = "{{ foo }}"
+      end
+      it "should respond" do
+        expect(subject).to respond_to(:liquid_body)
+      end
+      it "should always return a string" do
+        expect(subject.liquid_body).to be_a_kind_of(String)
+      end
+      context "(empty hash of values given)" do
+        it "should return empty string" do
+          expect(subject.liquid_body({})).to eq("")
+        end
+      end
+      context "(values given for keys used)" do
+        it "should return expected value" do
+          values = {
+            'foo' => 'bar'
+          }
+          expect(subject.liquid_body(values)).to eq("bar")
+        end
+      end
+    end
   end#(instance)
 end

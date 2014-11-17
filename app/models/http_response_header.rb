@@ -8,8 +8,15 @@
 #  description :text
 #
 
+# This class is meant to provide a list of known headers for selection
+# from a dropdown or similar form field.
 class HttpResponseHeader < ActiveRecord::Base
-  VALID_STATUSES = [ "provisional", "permanent", "unregistered", "nonstandard" ].freeze
+  VALID_STATUSES = [
+    "provisional",
+    "permanent",
+    "unregistered",
+    "nonstandard"
+  ].freeze
 
   validates :name,
             presence: true,
