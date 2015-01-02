@@ -44,4 +44,13 @@ module ApplicationHelper
   def user_api_scrap_url(user, scrap)
     user_api_endpoint_url(user, scrap.endpoint)
   end#user_api_scrap_url
+
+
+  # TODO: TEST
+  def link_to_top
+    inside = []
+    inside << content_tag(:span, "", class: "fa fa-chevron-up")
+    inside << "top"
+    content_tag(:a, inside.join(" ").html_safe, href: "#top", class: "btn btn-default btn-sm")
+  end
 end

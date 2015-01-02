@@ -24,5 +24,9 @@ Rails.application.routes.draw do
     resources :users, only: [:update]
   end
 
+  namespace :help do
+    get :liquid_variables
+  end
+
   root to: "public/scraps#index"
 end

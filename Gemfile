@@ -42,6 +42,9 @@ gem 'cancancan'
 gem 'less-rails'
 gem 'kaminari', github: "amatsuda/kaminari"
 
+gem 'liquid'
+gem 'faker'
+gem 'redcarpet'
 
 group :test, :development do
   gem "factory_girl_rails", "~> 4.0"
@@ -51,7 +54,6 @@ end
 group :development do
   gem 'annotate'
   gem 'yard'
-  gem 'redcarpet'
   gem 'guard'
   gem 'guard-rspec'
 

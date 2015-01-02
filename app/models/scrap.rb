@@ -17,6 +17,7 @@
 #  uid                :string(255)      not null, primary key
 #
 
+require 'liquid'
 class Scrap < ActiveRecord::Base
   self.primary_key = "uid"
 
@@ -26,9 +27,12 @@ class Scrap < ActiveRecord::Base
     #LINK UNLINK PURGE
   ].freeze
 
-  ENCODINGS = [ "UTF-8", "UTF-16", "ISO-8859-1" ].freeze
+  ENCODINGS = [
+    "UTF-8",
+    "UTF-16",
+    "ISO-8859-1"
+  ].freeze
 
-  # TODO: TEST
   LANGUAGES = {
     "XML" => "xml",
     "Javascript" => "javascript",
@@ -106,14 +110,28 @@ class Scrap < ActiveRecord::Base
 
   # Get compatible hash for ActiveController::Base#render
   #
+  # @param [Hash] opts
+  # @option opts [Hash] :liquid
+  #   A hash of liquid variable-value mappings.
+  #
   # @return [Hash]
-  def render_options
+  def render_options(opts={})
+    liquid_opts = opts.fetch(:liquid, {})
+
     {
-      body: self.body,
+      body: self.liquid_body(liquid_opts),
       content_type: self.content_type,
       status: self.status_code
     }
   end#render_options
+
+
+  # parses @body as potential liquid template against given variables
+  #
+  # @return [String]
+  def liquid_body(values={})
+    Liquid::Template.parse(self.body).render(values)
+  end#liquid_body
 
 
   # NOTE: Make sure "Content-Type" is always self.content_type
