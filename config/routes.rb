@@ -28,5 +28,9 @@ Rails.application.routes.draw do
     get :liquid_variables
   end
 
+  scope module: "public_pages" do
+    get :status
+  end
+
   root to: "public/scraps#index"
 end
