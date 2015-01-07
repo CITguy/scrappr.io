@@ -9,7 +9,7 @@ set :application, 'scrappr.io'
 set :repo_url, 'https://github.com/CITguy/scrappr.io.git'
 set :branch, :master
 set :deploy_via, :remote_cache
-set :deploy_to, "#{fetch(:apps_dir)}/#{fetch(:application)}"
+set :deploy_to, "#{fetch(:apps_dir)}/#{fetch(:stage)}.#{fetch(:application)}"
 set :scm, :git
 set :format, :pretty
 set :linked_files, %w[
@@ -113,5 +113,5 @@ namespace :deploy do
 
   before "deploy:check:linked_files", :ensure_local_app_config
   before "deploy:check:linked_files", :upload_private
-  after :publishing, "unicorn:restart"
+  after :publishing, "unicorn:legacy_restart"
 end#:deploy

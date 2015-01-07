@@ -45,6 +45,7 @@ gem 'kaminari', github: "amatsuda/kaminari"
 gem 'liquid'
 gem 'faker'
 gem 'redcarpet'
+gem 'font-awesome-rails'
 
 group :test, :development do
   gem "factory_girl_rails", "~> 4.0"

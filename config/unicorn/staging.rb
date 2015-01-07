@@ -1,7 +1,7 @@
 # unicorn_rails -c config/unicorn/production.rb -E production -D
 
 # 4 processes and 1 master
-worker_processes 4
+worker_processes 2
 
 # Load rails + application code into the master before forking workers
 # for super-fast worker spawn times
@@ -10,7 +10,7 @@ preload_app true
 # Restart any workers that haven't responded in 90 seconds
 timeout 90
 
-app_root = "/srv/http/scrappr.io/current"
+app_root = "/srv/http/staging.scrappr.io/current"
 
 stderr_path "#{app_root}/log/unicorn.stderr.log"
 stdout_path "#{app_root}/log/unicorn.stdout.log"
