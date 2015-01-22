@@ -4,9 +4,14 @@
       &copy;<%= Time.now.year %> All rights reserved
     </div>
     <div class="navbar-text navbar-right">
-      Fork this app
-      <%= link_to "on Github", "https://github.com/ScrapprIO/scrappr.io",  target:"_blank" %>
+      View
+      <%= link_to "on Github", "https://github.com/ScrapprIO/scrappr.io", target: "_blank" %>
       <span class="fa fa-github-alt"></span>
+    </div>
+    <div class="navbar-text navbar-right">
+      <%= link_to "https://waffle.io/scrapprio/scrappr.io", target: "_blank" do %>
+        <%= image_tag "https://badge.waffle.io/ScrapprIO/scrappr.io.png?label=in%20progress&title=In%20Progress" %>
+      <% end %>
     </div>
   </div>
 </nav>
