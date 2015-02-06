@@ -270,6 +270,7 @@ DEPENDENCIES
   mysql2
   omniauth-github
   rails (~> 4.1.0)
+  rake
   redcarpet
   rspec-rails
   sass-rails
