@@ -141,6 +141,7 @@ class Scrap < ActiveRecord::Base
   # @return [Hash]
   def http_headers
     {
+      "Access-Control-Allow-Origin" => "*",
       "Content-Type" => self.content_type
     }
   end#http_headers

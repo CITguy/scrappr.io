@@ -410,6 +410,8 @@ describe Scrap do
       context "(return value)" do
         let(:headers) { subject.http_headers }
         it { expect(headers["Content-Type"]).to eq(subject.content_type) }
+        it { expect(headers["Access-Control-Allow-Origin"]).to be_present }
+        it { expect(headers["Access-Control-Allow-Origin"]).to eq('*') }
       end
     end#http_headers
     describe "#to_param" do
