@@ -47,6 +47,8 @@ gem 'faker'
 gem 'redcarpet'
 gem 'font-awesome-rails'
 
+gem 'rb-readline'
+
 group :test, :development do
   gem "factory_girl_rails", "~> 4.0"
   gem 'rspec-rails'
