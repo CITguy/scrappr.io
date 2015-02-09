@@ -15,6 +15,7 @@ role :app, prod_servers
 role :web, prod_servers
 role :db,  prod_servers
 
+role :console, prod_servers
 
 # Extended Server Syntax
 # ======================

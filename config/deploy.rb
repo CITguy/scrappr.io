@@ -20,7 +20,6 @@ set :linked_files, %w[
 set :keep_releases, 3
 set :pty, true
 set :linked_dirs, %w[
-  bin
   log
   tmp/pids
   tmp/cache
@@ -28,6 +27,9 @@ set :linked_dirs, %w[
   vendor/bundle
   public/system
 ]
+
+# because reasons (https://github.com/capistrano/bundler/issues/45)
+set :bundle_binstubs, nil
 
 # Default value for :log_level is :debug
 # set :log_level, :debug
@@ -80,7 +82,7 @@ namespace :rails do
     port = fetch(:port)
     cmd = "bundle exec rails console #{fetch(:rails_env)}"
     on roles(:console) do
-      exec "ssh -l #{user} -p #{port} -t 'cd #{fetch(:deploy_to)}/current && #{cmd}'"
+      exec "ssh -l #{user} #{host} -p #{port} -t 'cd #{fetch(:deploy_to)}/current && #{cmd}'"
     end
   end#:console
 end#:rails

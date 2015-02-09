@@ -15,6 +15,7 @@ role :app, stage_servers
 role :web, stage_servers
 role :db,  stage_servers
 
+role :console, stage_servers
 
 # Extended Server Syntax
 # ======================
