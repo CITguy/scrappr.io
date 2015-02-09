@@ -22,3 +22,5 @@
 
 config/app_config.local.yml
 config/private.yml
+
+./bin
