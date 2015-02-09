@@ -98,9 +98,10 @@ namespace :deploy do
   task :ensure_local_app_config do
     shared_config = "#{fetch(:deploy_to)}/shared/config"
     on roles(:app) do
-      if test("[ ! -e #{shared_config}/app_config.local.yml ]")
-        execute "echo '_:' >> #{shared_config}/app_config.local.yml"
-      end
+      upload! "config/app_config.local.yml", File.join(deploy_to, "shared", "config", "app_config.local.yml")
+      #if test("[ ! -e #{shared_config}/app_config.local.yml ]")
+      #  execute "echo '_:' >> #{shared_config}/app_config.local.yml"
+      #end
     end
   end#:ensure_local_app_config
 
