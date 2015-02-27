@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  match "*path", to: "public#api_preflight", via: [:options]
+  match "*path", to: "public_pages#api_preflight", via: [:options]
 
   # Omniauth-ONLY login scheme
   devise_for :users, controllers: { omniauth_callbacks: "user_sessions" }
