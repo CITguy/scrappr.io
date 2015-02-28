@@ -21,6 +21,29 @@ class Users::Api::ScrapsController < Users::ApiController
     end
   end#show
 
+  # https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
+  def preflight
+    @scraps = Scrap.where({
+      user: @user,
+      endpoint: params[:endpoint]
+    })
+
+    if @scraps.count > 0
+      response.headers.merge!({
+        # allow access from anywhere
+        "Access-Control-Allow-Origin" => "*",
+        # only allow methods supported by scrappr
+        "Access-Control-Allow-Methods" => Scrap::HTTP_METHODS.join(','),
+        # allow headers by echoing requested headers always matches
+        "Access-Control-Allow-Headers" => request.headers["Access-Control-Request-Headers"]
+      })
+
+      render :text => "OK", :status => 200
+    else
+      invalid_path("Endpoint")
+    end
+  end#preflight
+
   # "PRIVATE" methods
 
   # TODO: TEST

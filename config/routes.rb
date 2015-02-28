@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  match "*path", to: "public_pages#api_preflight", via: [:options]
-
   # Omniauth-ONLY login scheme
   devise_for :users, controllers: { omniauth_callbacks: "user_sessions" }
   devise_scope :user do
@@ -19,7 +17,10 @@ Rails.application.routes.draw do
   end
   ## User-API Routes
   scope module: "users/api", as: :user_api do
-    match ":user_id/api/*endpoint" => "scraps#show", via: :all, as: :endpoint
+    api_path = ":user_id/api/*endpoint"
+
+    match api_path => "scraps#preflight", via: [:options], as: :cors_preflight
+    match api_path => "scraps#show", via: Scrap::HTTP_METHODS, as: :endpoint
   end
 
   namespace :api do
