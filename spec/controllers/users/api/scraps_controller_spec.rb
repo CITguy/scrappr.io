@@ -50,4 +50,62 @@ describe Users::Api::ScrapsController do
       end
     end#<verb> #show
   end#Scrap::HTTP_METHODS
+
+  describe "CORS preflight" do
+    cors_headers = [
+      "Access-Control-Allow-Origin",
+      "Access-Control-Allow-Methods",
+      "Access-Control-Allow-Headers"
+    ]
+
+    let(:defined_headers) { "X-Auth-Token, access, foobar" }
+
+    before(:each) do
+      request.headers["Access-Control-Request-Headers"] = defined_headers
+    end
+
+    context "when valid scraps exist" do
+      before(:each) do
+        scrap = FactoryGirl.create(:scrap, http_method: "GET")
+        send_params = { user_id: scrap.user.username, endpoint: scrap.endpoint }
+
+        process(:preflight, "OPTIONS", send_params)
+      end
+
+      it "should return successful" do
+        expect(response.status).to eq(200)
+      end
+      cors_headers.each do |ch|
+        it "should define header '#{ch}'" do
+          expect(response.headers).to have_key(ch)
+        end
+      end
+      it "should return requested cors headers as allowed cors headers" do
+        expect(response.headers["Access-Control-Allow-Headers"]).to eq(defined_headers)
+      end
+    end
+
+    context "when valid scraps do not exist" do
+      before(:each) do
+        Scrap.destroy_all
+
+        scrap = FactoryGirl.build(:scrap)
+        send_params = { user_id: scrap.user.username, endpoint: scrap.endpoint }
+
+        process(:preflight, "OPTIONS", send_params)
+      end
+
+      it "should return unsuccessful (404)" do
+        expect(response.status).to eq(404)
+      end
+      cors_headers.each do |ch|
+        it "should not define header '#{ch}'" do
+          expect(response.headers).to_not have_key(ch)
+        end
+      end
+      it "should not return requested cors headers as allowed cors headers" do
+        expect(response.headers["Access-Control-Allow-Headers"]).to_not eq(defined_headers)
+      end
+    end
+  end#CORS preflight
 end

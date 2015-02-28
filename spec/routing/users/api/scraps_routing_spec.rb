@@ -5,13 +5,13 @@ describe Users::Api::ScrapsController do
   describe "(routes)" do
     # /:user_id/api/*endpoint
     context "(valid route)" do
-      Scrap::HTTP_METHODS.each do |m|
-        [
-          "hello",
-          "hello/there",
-          "hello/my/darling"
-        ].each do |endpoint|
-          path = "/FuBaur/api/#{endpoint}"
+      [
+        "hello",
+        "hello/there",
+        "hello/my/darling"
+      ].each do |endpoint|
+        path = "/FuBaur/api/#{endpoint}"
+        Scrap::HTTP_METHODS.each do |m|
           context "#{m} #{path}" do
             it "should be routable" do
               expect( "#{m.downcase}" => path ).to be_routable
@@ -25,6 +25,19 @@ describe Users::Api::ScrapsController do
               })
             end#should route correctly
           end
+        end
+        context "options #{path}" do
+          it "should be routable" do
+            expect( "options" => path ).to be_routable
+          end#should be routable
+          it "should route correctly" do
+            expect( "options" => path ).to route_to({
+              controller: controller,
+              action: "preflight",
+              user_id: "FuBaur",
+              endpoint: endpoint
+            })
+          end#should route correctly
         end
       end
     end#(valid route)
