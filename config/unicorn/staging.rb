@@ -1,7 +1,7 @@
 # unicorn_rails -c config/unicorn/production.rb -E production -D
 
-# 4 processes and 1 master
-worker_processes 2
+# 1 process and 1 master
+worker_processes 1
 
 # Load rails + application code into the master before forking workers
 # for super-fast worker spawn times
