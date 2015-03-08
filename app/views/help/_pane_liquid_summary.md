@@ -3,7 +3,6 @@ Scrappr makes use of the Liquid templating library to provide useful
 functionality within your endpoint content.  Such functionality includes:
 
 * **Params** - Access to submitted parameters
-* **Headers** - Access to submitted headers
 * **Fake** - Generated Data (powered by Faker)
 
 
