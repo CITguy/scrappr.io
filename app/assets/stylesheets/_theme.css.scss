@@ -232,3 +232,23 @@ dl.inline {
   font-weight: 700;
   color: #777;
 }
+
+.social-media {
+  a {
+    color: #333;
+    &:hover, &:focus {
+      text-decoration: none;
+    }
+  }
+
+  .twitter {
+    &:hover, &:focus {
+      color: #55acee;
+    }
+  }
+  .github {
+    &:hover, &:focus {
+      color: #4183c4;
+    }
+  }
+}
