@@ -4,10 +4,13 @@
       &copy; <%= Time.now.year %> All rights reserved
       (<span class="release_version"><%= APP_CONFIG['version'] %></span>)
     </div>
-    <div class="navbar-text navbar-right">
-      View
-      <%= link_to "on Github", "https://github.com/ScrapprIO/scrappr.io", target: "_blank" %>
-      <span class="fa fa-github-alt"></span>
+    <div class="navbar-text navbar-right social-media">
+      <%= link_to "https://github.com/ScrapprIO/scrappr.io", target: "_blank", class: "github" do %>
+        <span class="fa fa-fw fa-lg fa-github-alt"></span>
+      <% end %>
+        <%= link_to "https://twitter.com/ScrapprIO", target: "_blank", class: "twitter" do %>
+          <span class="fa fa-fw fa-lg fa-twitter"></span>
+        <% end %>
     </div>
     <div class="navbar-text navbar-right">
       <%= link_to "https://waffle.io/scrapprio/scrappr.io", target: "_blank" do %>
