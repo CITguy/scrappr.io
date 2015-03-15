@@ -40,7 +40,7 @@ set :bundle_binstubs, nil
 
 ## RBENV CONFIGS
 # (https://github.com/capistrano/rbenv)
-set :rbenv_type, :user #:system
+set :rbenv_type, :system
 set :rbenv_ruby, File.read(".ruby-version").strip
 set :rbenv_map_bins, %w[ rake gem bundle ruby rails ]
 set :rbenv_roles, :all
