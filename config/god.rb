@@ -11,7 +11,10 @@ rbenv_root = "/usr/local/rbenv"
     w.interval = 30.seconds # default
 
     # bundle exec needs to be run from the rails root
-    w.start = "cd #{rails_root} && #{rbenv_root}/shims/bundle exec unicorn -D -E deployment -c #{unicorn_cfg}"
+    #w.start = "cd #{rails_root} && #{rbenv_root}/shims/bundle exec unicorn -D -E deployment -c #{unicorn_cfg}"
+    env_vars = "RBENV_ROOT=#{rbenv_root} RBENV_VERSION=2.1.2 RAILS_ENV=#{rails_env}"
+    start_cmd = "#{rbenv_root}/bin/rbenv exec bundle exec unicorn -c #{unicorn_cfg} -E deployment -D"
+    w.start = "cd #{rails_root} && (#{env_vars} #{start_cmd})"
 
     # QUIT gracefully shuts down workers
     w.stop = "kill -QUIT `cat #{unicorn_pid}`"
