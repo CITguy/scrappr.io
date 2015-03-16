@@ -3,6 +3,10 @@
     <div class="navbar-text navbar-left">
       &copy; <%= Time.now.year %> All rights reserved
       (<span class="release_version"><%= APP_CONFIG['version'] %></span>)
+      -
+      <%= link_to "https://github.com/ScrapprIO/scrappr.io/releases", target: "_blank" do %>
+        Release Notes
+      <% end %>
     </div>
     <div class="navbar-text navbar-right social-media">
       <%= link_to "https://github.com/ScrapprIO/scrappr.io", target: "_blank", class: "github" do %>
